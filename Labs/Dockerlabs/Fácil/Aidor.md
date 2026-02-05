@@ -16,7 +16,7 @@ nmap -sS -p- -vvv -n -Pn --open --min-rate 5000 -oN ports 172.17.0.2
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251118195108](Hacking-repo-obs/Anexos/Pasted%20image%2020251118195108.png)
+![Pasted image 20251118195108](/Anexos/Pasted%20image%2020251118195108.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -24,11 +24,11 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV -p22,5000 -oN version -n -Pn 172.17.0.2
 ```
 
-![Pasted image 20251118195144](Hacking-repo-obs/Anexos/Pasted%20image%2020251118195144.png)
+![Pasted image 20251118195144](/Anexos/Pasted%20image%2020251118195144.png)
 
 Hay un servicio web corriendo por el puerto 5000, así que vamos a echar un vistazo:
 
-![Pasted image 20251118232731](Hacking-repo-obs/Anexos/Pasted%20image%2020251118232731.png)
+![Pasted image 20251118232731](/Anexos/Pasted%20image%2020251118232731.png)
 
 Vemos un panel de log-in que nos da la posibilidad de registrarnos, así que lo intentamos, con éxito. Ahora es momento de acceder con las credenciales que hemos elegido, en mi caso las siguientes:
 
