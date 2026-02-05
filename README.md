@@ -4,7 +4,13 @@
 
 #### 👤 Sobre mí
 
-¡Hola! Soy un apasionado de la ciberseguridad y el pentesting en constante formación. Este espacio nace de mi necesidad de documentar cada paso, vulnerabilidad y técnica que aprendo en el día a día. Creo firmemente que la mejor forma de asimilar un concepto es explicándolo, por lo que este "libro de hacking" es el reflejo de mi laboratorio personal y mi camino en el mundo del Red Team. 🛡️✨
+Soy Víctor 👨‍💻, técnico de sistemas en formación (Grado Superior de ASIR) con foco en ciberseguridad. Mi interés principal es comprender en profundidad la infraestructura IT —sistemas, redes y servicios— y cómo se comporta frente a ataques reales.
+
+En el ámbito ofensivo cuento con la certificación **eJPT** 🛡️ y actualmente estoy preparando la **eCPPT**, apoyándome en laboratorios prácticos y plataformas como Hack The Box, donde trabajo enumeración, explotación, pivoting y movimiento lateral de forma sistemática.
+
+Paralelamente, estoy desarrollando competencias en el área **Blue Team** (SOC, defensa y respuesta ante incidentes) con el objetivo de construir un perfil profesional completo, capaz de aportar tanto desde la visión ofensiva como desde la defensiva 🎯.
+
+Este GitBook 📚 actúa como mi documentación técnica de referencia: un repositorio de apuntes, procedimientos y writeups que reflejan mi forma de trabajar, mi progreso y la manera en que estructuro mi aprendizaje en ciberseguridad.
 
 ***
 
