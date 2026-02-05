@@ -31,14 +31,14 @@ Este comando significa que **socat se pone en escucha por el puerto 4445 de la m
 
 2. En este paso y con todo lo anterior configurado abro metasploit en mi máquina de atacante, busco eternal blue y uso el auxiliario **scanner/smb/smb\_ms17\_010** para testear que todo funcione. Ejecuto **options**y las introduzco:
 
-![Pasted image 20251204222041](<../.gitbook/assets/Pasted image 20251204222041.png>)
+![Pasted image 20251204222041](<../../.gitbook/assets/Pasted image 20251204222041.png>)
 
 El host es la IP de la máquina que está ejecutando socat y haciendo de "puente", y el puerto es el 4445 porque es en el que nos hemos puesto en escucha con socat. Al ejecutar esto vemos que efectivamente el flujo de la conexión se ejecuta correctamente:
 
-![Pasted image 20251204222156](<../.gitbook/assets/Pasted image 20251204222156.png>)
+![Pasted image 20251204222156](<../../.gitbook/assets/Pasted image 20251204222156.png>)
 
 Metasploit (Atacante) ↓ Envía exploit a 192.168.0.211:4445 ↓ Socat (en B) escucha en :4445 ↓ Socat redirige a 10.10.10.134:445 ↓ EternalBlue explota 10.10.10.134:445
 
 Ahora podemos finalmente obtener la sesión de meterpreter usando el exploit definitivo. Para este caso he elegido **exploit/windows/smb/ms17\_010\_eternalblue**. Ahora seteamos las opciones:
 
-![Pasted image 20251204223813](<../.gitbook/assets/Pasted image 20251204223813.png>)
+![Pasted image 20251204223813](<../../.gitbook/assets/Pasted image 20251204223813.png>)

@@ -8,17 +8,17 @@ tags:
 
 ***
 
-![900](<../../.gitbook/assets/Pasted image 20251025065944.png>)
+![900](<../../../.gitbook/assets/Pasted image 20251025065944.png>)
 
 Aquí vamos a aplicar un URL decode a ese enlace y probamos cambiar la ip por la del localhost:
 
-![Pasted image 20251025070502](<../../.gitbook/assets/Pasted image 20251025070502.png>)
+![Pasted image 20251025070502](<../../../.gitbook/assets/Pasted image 20251025070502.png>)
 
-![Pasted image 20251025070536](<../../.gitbook/assets/Pasted image 20251025070536.png>)
+![Pasted image 20251025070536](<../../../.gitbook/assets/Pasted image 20251025070536.png>)
 
 Accedemos encontes a http://localhost/admin:
 
-![Pasted image 20251025070632](<../../.gitbook/assets/Pasted image 20251025070632.png>)
+![Pasted image 20251025070632](<../../../.gitbook/assets/Pasted image 20251025070632.png>)
 
 Buscamos en el código el botón de delete:
 
@@ -28,15 +28,15 @@ Resuelto
 
 ***
 
-![Pasted image 20251025071522](<../../.gitbook/assets/Pasted image 20251025071522.png>)
+![Pasted image 20251025071522](<../../../.gitbook/assets/Pasted image 20251025071522.png>)
 
 Para este laboratorio vamos a usar el intruder para fuzzear la parte del host de la IP.
 
-![Pasted image 20251025073331](<../../.gitbook/assets/Pasted image 20251025073331.png>)
+![Pasted image 20251025073331](<../../../.gitbook/assets/Pasted image 20251025073331.png>)
 
-![Pasted image 20251025073435](<../../.gitbook/assets/Pasted image 20251025073435.png>)
+![Pasted image 20251025073435](<../../../.gitbook/assets/Pasted image 20251025073435.png>)
 
-![Pasted image 20251025073500](<../../.gitbook/assets/Pasted image 20251025073500.png>)
+![Pasted image 20251025073500](<../../../.gitbook/assets/Pasted image 20251025073500.png>)
 
 Resuelto
 
@@ -44,7 +44,7 @@ Resuelto
 
 ***
 
-![Pasted image 20251026060738](<../../.gitbook/assets/Pasted image 20251026060738.png>)
+![Pasted image 20251026060738](<../../../.gitbook/assets/Pasted image 20251026060738.png>)
 
 Para saltarse esta protección, se puede probar alguna de las siguientes opciones:
 
@@ -61,14 +61,14 @@ a = %61
 a, por tanto, vale = %2561
 ```
 
-![Pasted image 20251026061305](<../../.gitbook/assets/Pasted image 20251026061305.png>)
+![Pasted image 20251026061305](<../../../.gitbook/assets/Pasted image 20251026061305.png>)
 
 En este caso, la opción que funciona es la siguiente:
 
-![Pasted image 20251026061536](<../../.gitbook/assets/Pasted image 20251026061536.png>)
+![Pasted image 20251026061536](<../../../.gitbook/assets/Pasted image 20251026061536.png>)
 
 #### SSRF with filter bypass via open redirection vulnerability
 
 ***
 
-![Pasted image 20251026064143](<../../.gitbook/assets/Pasted image 20251026064143.png>)
+![Pasted image 20251026064143](<../../../.gitbook/assets/Pasted image 20251026064143.png>)

