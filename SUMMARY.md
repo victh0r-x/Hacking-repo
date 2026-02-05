@@ -43,6 +43,7 @@
     * [Rpcclient](Herramientas/SMB/Rpcclient.md)
     * [SMBMAP](Herramientas/SMB/SMBMAP.md)
     * [SMBclient](Herramientas/SMB/SMBclient.md)
+* [WRITEUPS](writeups.md)
 * [WRITEUPS](labs/README.md)
   * [Metasploitable 2](<Labs/Metasploitable 2.md>)
   * [Hack My VM](labs/hack-my-vm/README.md)
