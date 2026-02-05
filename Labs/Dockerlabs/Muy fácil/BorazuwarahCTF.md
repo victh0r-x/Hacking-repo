@@ -1,16 +1,18 @@
-tags:  #muy-facil #fuzzing #ssh #hydra #exiftool 
-_______________________
+# BorazuwarahCTF
+
+tags: #muy-facil #fuzzing #ssh #hydra #exiftool
+
+***
+
 Comenzamos la máquina haciendo un escaneo completo de puertos, versiones y vulnerabilidades con nmap:
 
 ```bash
 nmap -sCVS -p- --open --min-rate 5000 -n -Pn -oN scan -vvv 172.17.0.2
 ```
 
-![Pasted image 20251009140430.png](Pasted%20image%2020251009140430.png)
-
 Vemos que tenemos un servicio web activo, así que vamos a echar un vistazo:
 
-![Pasted image 20251009140528](../../../Anexos/Pasted%20image%2020251009140528.png)
+![Pasted image 20251009140528](<../../../.gitbook/assets/Pasted image 20251009140528.png>)
 
 Nada que nos indique pistas sobre nombres de usuario o cualquier otra cosa. Probamos hacer fuzzing con gobuster:
 
@@ -18,15 +20,13 @@ Nada que nos indique pistas sobre nombres de usuario o cualquier otra cosa. Prob
 obuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x .php,.xml,.txt,.html -t 10 -o dirs.txt
 ```
 
-![Pasted image 20251009140954.png](Pasted%20image%2020251009140954.png)
-
-No encontramos nada.  Nos descargamos la foto y ejecutamos el siguiente comando para extraer información oculta:
+No encontramos nada. Nos descargamos la foto y ejecutamos el siguiente comando para extraer información oculta:
 
 ```bash
 steghide extract -sf imagen.jpeg
 ```
 
-![Pasted image 20251009143011](../../../Anexos/Pasted%20image%2020251009143011.png)
+![Pasted image 20251009143011](<../../../.gitbook/assets/Pasted image 20251009143011.png>)
 
 Probamos usar la herramienta dexiftool para analizar la imagen, y obtenemos lo siguiente:
 
@@ -34,15 +34,11 @@ Probamos usar la herramienta dexiftool para analizar la imagen, y obtenemos lo s
 exiftool imagen.jpeg
 ```
 
-![Pasted image 20251009143339.png](Pasted%20image%2020251009143339.png)
-
 Como podemos ver, en el campo Description nos proporciona un nombre de usuario, así que haremos fuerza bruta con hydra en el servicio ssh para intentar acceder como el usuario borazuwarah:
 
 ```bash
 hydra -l borazuwarah -P /usr/share/seclists/Passwords/xato-net-10-million-passwords-10000.txt -I ssh://172.17.0.2
 ```
-
-![Pasted image 20251009143815.png](Pasted%20image%2020251009143815.png)
 
 Rápidamente nos arroja la contraseña: 123456
 
@@ -52,14 +48,12 @@ Ahora nos conectamos por ssh con el usuario para ver que nos encontramos:
 ssh borazuwarah@172.17.0.2
 ```
 
-![Pasted image 20251009144102](../../../Anexos/Pasted%20image%2020251009144102.png)
+![Pasted image 20251009144102](<../../../.gitbook/assets/Pasted image 20251009144102.png>)
 
-Ya somos el usuario borazuwarah. Ahora, al ejecutar **sudo -l*** vemos lo siguiente:
-
-![Pasted image 20251009144159.png](Pasted%20image%2020251009144159.png)
+Ya somos el usuario borazuwarah. Ahora, al ejecutar **sudo -l**\* vemos lo siguiente:
 
 Así que, si ejecutamos **sudo /bin/bash** deberíamos tener acceso
 
-![Pasted image 20251009144259](../../../Anexos/Pasted%20image%2020251009144259.png)
+![Pasted image 20251009144259](<../../../.gitbook/assets/Pasted image 20251009144259.png>)
 
 Y somos root!

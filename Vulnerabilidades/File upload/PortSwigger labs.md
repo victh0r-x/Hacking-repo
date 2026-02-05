@@ -1,27 +1,23 @@
+# PortSwigger labs
+
 tags:
-_____
-### Web shell upload via path traversal
 
-![1200](../../Anexos/Pasted%20image%2020251023114811.png)
+***
 
-![1200](../../Anexos/Pasted%20image%2020251023114902.png)
+#### Web shell upload via path traversal
 
-![Pasted image 20251023114726](../../Anexos/Pasted%20image%2020251023114726.png)
+![1200](<../../.gitbook/assets/Pasted image 20251023114811.png>)
 
-### Web shell upload via extension blacklist bypass
+![1200](<../../.gitbook/assets/Pasted image 20251023114902.png>)
+
+![Pasted image 20251023114726](<../../.gitbook/assets/Pasted image 20251023114726.png>)
+
+#### Web shell upload via extension blacklist bypass
 
 AddType application/x-httpd-director dcr
 
-![800](Pasted%20image%2020251023121100.png)
+![800](<../../.gitbook/assets/Pasted image 20251023121212.png>)
 
-![800](Pasted%20image%2020251023121018.png)
+#### Web shell upload via obfuscated file extension
 
-![800](../../Anexos/Pasted%20image%2020251023121212.png)
-
-### Web shell upload via obfuscated file extension
-
-![800](../../Anexos/Pasted%20image%2020251023133321.png)
-
-
-
-
+![800](<../../.gitbook/assets/Pasted image 20251023133321.png>)
