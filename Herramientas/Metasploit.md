@@ -35,12 +35,12 @@ search ssh_login
 use / search scanner/smb/smb_login 
 ```
 
-![Pasted image 20251017023503](Hacking-repo-obs/Anexos/Pasted%20image%2020251017023503.png)
+![Pasted image 20251017023503](../../Anexos/Pasted%20image%2020251017023503.png)
 
 Ahora, solo debemos rellenar la sección de USERNAME y la de PASS_FILE:
 
-![Pasted image 20251017030417](Hacking-repo-obs/Anexos/Pasted%20image%2020251017030417.png)
+![Pasted image 20251017030417](../../Anexos/Pasted%20image%2020251017030417.png)
 
 Ya solo queda esperar:
 
-![Pasted image 20251017031028](Hacking-repo-obs/Anexos/Pasted%20image%2020251017031028.png)
+![Pasted image 20251017031028](../../Anexos/Pasted%20image%2020251017031028.png)

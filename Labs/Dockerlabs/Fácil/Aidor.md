@@ -6,7 +6,7 @@ ____
 ping -c 1 172.17.0.2
 ```
   
-![Pasted image 20251118194611](Hacking-repo-obs/Anexos/Pasted%20image%2020251118194611.png)
+![Pasted image 20251118194611](../../../../Anexos/Pasted%20image%2020251118194611.png)
 
 Estamos ante un sistema linux, así que seguimos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
 
@@ -16,7 +16,7 @@ nmap -sS -p- -vvv -n -Pn --open --min-rate 5000 -oN ports 172.17.0.2
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251118195108](Hacking-repo-obs/Anexos/Pasted%20image%2020251118195108.png)
+![Pasted image 20251118195108](../../../../Anexos/Pasted%20image%2020251118195108.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -24,11 +24,11 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV -p22,5000 -oN version -n -Pn 172.17.0.2
 ```
 
-![Pasted image 20251118195144](Hacking-repo-obs/Anexos/Pasted%20image%2020251118195144.png)
+![Pasted image 20251118195144](../../../../Anexos/Pasted%20image%2020251118195144.png)
 
 Hay un servicio web corriendo por el puerto 5000, así que vamos a echar un vistazo:
 
-![Pasted image 20251118232731](Hacking-repo-obs/Anexos/Pasted%20image%2020251118232731.png)
+![Pasted image 20251118232731](../../../../Anexos/Pasted%20image%2020251118232731.png)
 
 Vemos un panel de log-in que nos da la posibilidad de registrarnos, así que lo intentamos, con éxito. Ahora es momento de acceder con las credenciales que hemos elegido, en mi caso las siguientes:
 
@@ -38,7 +38,7 @@ Contraseña: tor
 correo: vic@vic.com
 ```
 
-![Pasted image 20251118232906](Hacking-repo-obs/Anexos/Pasted%20image%2020251118232906.png)
+![Pasted image 20251118232906](../../../../Anexos/Pasted%20image%2020251118232906.png)
 
 Nada más acceder ya vemos algo interesante en la URL: un id.
 Esto es muy importante tenerlo en cuenta ya que si no está bien programado, existe la posibilidad de poder modificar libremente la id para acceder a usuarios, archivos, etc a los que no debería poder acceder.
@@ -46,7 +46,7 @@ Esto es muy importante tenerlo en cuenta ya que si no está bien programado, exi
 Para explotar esto, vamos a iterar por un rango de **ids** para poder obtener información. Si nos damos cuenta, hay un patrón que es igual independientemente de qué id pongas, y es la parte en la que dice **Bienvenido, vic**
 Si cambio la id de la URL por otra, sigue el mismo patrón:
 
-![Pasted image 20251119001007](Hacking-repo-obs/Anexos/Pasted%20image%2020251119001007.png)
+![Pasted image 20251119001007](../../../../Anexos/Pasted%20image%2020251119001007.png)
 
 Visto esto, podemos intentar deducir que en el caso del usuario admin, lo llame por el usuario admin y no por el nombre real de una persona.
 
@@ -64,8 +64,8 @@ wfuzz -u http://172.17.0.2:5000/dashboard?id=FUZZ -w range.txt --hc=302 -f fuzz
 
 Esto nos exporta el resultado en un archivo llamado simplemente fuzz usando el parámetro -f:
 
-![Pasted image 20251119131120](Hacking-repo-obs/Anexos/Pasted%20image%2020251119131120.png)
-![Pasted image 20251119001607](Hacking-repo-obs/Anexos/Pasted%20image%2020251119001607.png)
+![Pasted image 20251119131120](../../../../Anexos/Pasted%20image%2020251119131120.png)
+![Pasted image 20251119001607](../../../../Anexos/Pasted%20image%2020251119001607.png)
 
 Como podemos ver, hay muchos usuarios y sabemos que en uno de ellos es posible que aparezca el título: **Bienvenido, admin**
 Mediante el siguiente comando vamos a extraer únicamente el número del id convertido en un formato de fila y copiarlo a nuestra clipboard para construir nuestro comando:
@@ -74,7 +74,7 @@ Mediante el siguiente comando vamos a extraer únicamente el número del id conv
 cat fuzz | awk '{print $9}' | tr '"' ' ' | tr '\n' ' ' | xclip -sel clip
 ```
 
-![Pasted image 20251119001829](Hacking-repo-obs/Anexos/Pasted%20image%2020251119001829.png)
+![Pasted image 20251119001829](../../../../Anexos/Pasted%20image%2020251119001829.png)
 
 Y por último, usando esos números, construimos un comando one-liner que nos itere por cada número dentro de la URL y nos diga si aparece alguno que arroje como resultado admin:
 
@@ -98,10 +98,10 @@ for id in 3 7 15 31 50 49 48 47 46 45 38 41 36 43 40 37 44 39 42 35 32 29 30 28 
 
 Al ejecutarlo, obtenemos lo siguiente:
 
-![Pasted image 20251119002442](Hacking-repo-obs/Anexos/Pasted%20image%2020251119002442.png)
+![Pasted image 20251119002442](../../../../Anexos/Pasted%20image%2020251119002442.png)
 
 Ponemos el id 27 en la URL y somos el usuario admin:
 
-![Pasted image 20251119130854](Hacking-repo-obs/Anexos/Pasted%20image%2020251119130854.png)
+![Pasted image 20251119130854](../../../../Anexos/Pasted%20image%2020251119130854.png)
 
 

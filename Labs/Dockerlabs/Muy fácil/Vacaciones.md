@@ -6,7 +6,7 @@ Comenzamos la máquina haciendo un escaneo de los puertos y versiones, así como
 nmap -sSCV -p- --min-rate 5000 -n -Pn -vvv --open -oN scan 172.17.0.2
 ```
 
-![Pasted image 20251009151550](Hacking-repo-obs/Anexos/Pasted%20image%2020251009151550.png)
+![Pasted image 20251009151550](../../../../Anexos/Pasted%20image%2020251009151550.png)
 
 Cuando vamos a analizar el servicio web, vemos que la web está en blanco, pero si analizamos el código fuente, vemos lo siguiente:
 
@@ -27,7 +27,7 @@ Accedemos por ssh a su usuario usando el siguiente comando:
 ssh camilo@172.17.0.2
 ```
 
-![Pasted image 20251009152652](Hacking-repo-obs/Anexos/Pasted%20image%2020251009152652.png)
+![Pasted image 20251009152652](../../../../Anexos/Pasted%20image%2020251009152652.png)
 
 Aquí ya estamos como camilo, y además ejecuto el siguiente comando para obtener una mejor shell:
 
@@ -41,7 +41,7 @@ Ahora ejecutamos el comando:
 find / --name "correo*" 2>/dev/null
 ```
 
-![Pasted image 20251009153929](Hacking-repo-obs/Anexos/Pasted%20image%2020251009153929.png)
+![Pasted image 20251009153929](../../../../Anexos/Pasted%20image%2020251009153929.png)
 
 Y ahora, lo leeremos:
 
@@ -49,11 +49,11 @@ Y ahora, lo leeremos:
 
 Si recordamos, este correo fue enviado por juan,, así que nos conectamos a su usuario:
 
-![Pasted image 20251009154200](Hacking-repo-obs/Anexos/Pasted%20image%2020251009154200.png)
+![Pasted image 20251009154200](../../../../Anexos/Pasted%20image%2020251009154200.png)
 
 Ejecutando **sudo -l** vemos lo siguiente:
 
-![Pasted image 20251009154241](Hacking-repo-obs/Anexos/Pasted%20image%2020251009154241.png)
+![Pasted image 20251009154241](../../../../Anexos/Pasted%20image%2020251009154241.png)
 
 Con una búsqueda en https://gtfobins.github.io/gtfobins/ obtenemos lo siguiente del binario ruby:
 

@@ -18,7 +18,7 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,80 -vvv -oN version 172.17.0.2
 ```
 
-![Pasted image 20251022150755](Hacking-repo-obs/Anexos/Pasted%20image%2020251022150755.png)
+![Pasted image 20251022150755](../../../../Anexos/Pasted%20image%2020251022150755.png)
 
 ```bash
 gobuster dir -u 172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,txt,html -o dirs.txt
@@ -33,7 +33,7 @@ gobuster dir -u 172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/director
 hydra -L /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt -p lapassworddebackupmaschingonadetodas ssh://172.17.0.2:5000 -I
 ```
 
-![Pasted image 20251022152504](Hacking-repo-obs/Anexos/Pasted%20image%2020251022152504.png)
+![Pasted image 20251022152504](../../../../Anexos/Pasted%20image%2020251022152504.png)
 
 Accedemos por ssh:
 
@@ -41,6 +41,6 @@ Accedemos por ssh:
 
 ![Pasted image 20251022152816.png](Pasted%20image%2020251022152816.png)
 
-![Pasted image 20251022152957](Hacking-repo-obs/Anexos/Pasted%20image%2020251022152957.png)
+![Pasted image 20251022152957](../../../../Anexos/Pasted%20image%2020251022152957.png)
 
 

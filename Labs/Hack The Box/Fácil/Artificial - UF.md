@@ -7,7 +7,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 10.10.11.74
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251026070557](Hacking-repo-obs/Anexos/Pasted%20image%2020251026070557.png)
+![Pasted image 20251026070557](../../../../Anexos/Pasted%20image%2020251026070557.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -15,17 +15,17 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,80,8000 -vvv -oN version 10.10.11.74 
 ```
 
-![Pasted image 20251026070709](Hacking-repo-obs/Anexos/Pasted%20image%2020251026070709.png)
+![Pasted image 20251026070709](../../../../Anexos/Pasted%20image%2020251026070709.png)
 
 Además de ver abiertos los puertos 22, 80 y 8000, vemos que en el puerto 80 se ha fallado un intento de redirección al dominio http://artificial.htb/ así que vamos a añadirlo al archivo **/etc/hosts**:
 
-![Pasted image 20251026071145](Hacking-repo-obs/Anexos/Pasted%20image%2020251026071145.png)
+![Pasted image 20251026071145](../../../../Anexos/Pasted%20image%2020251026071145.png)
 
-![Pasted image 20251026071328](Hacking-repo-obs/Anexos/Pasted%20image%2020251026071328.png)
+![Pasted image 20251026071328](../../../../Anexos/Pasted%20image%2020251026071328.png)
 
 Vemos un panel de registro, así que vamos a crearnos una cuenta para ver que se halla en el interior del servicio:
 
-![Pasted image 20251026071454](Hacking-repo-obs/Anexos/Pasted%20image%2020251026071454.png)
+![Pasted image 20251026071454](../../../../Anexos/Pasted%20image%2020251026071454.png)
 
 Al ver esto, vamos a intentar subir un archivo php con un código malicioso y ver qué pasa:
 

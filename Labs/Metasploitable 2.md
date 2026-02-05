@@ -48,15 +48,15 @@ Ejecutamos el siguiente comando para buscar vulnerabilidades en este puerto:
 nmap --script vuln -p21 172.20.10.4 -oN vuln-21 -n -Pn --min-rate 5000  
 ```
 
-![Pasted image 20251016125056](Hacking-repo-obs/Anexos/Pasted%20image%2020251016125056.png)
+![Pasted image 20251016125056](../../Anexos/Pasted%20image%2020251016125056.png)
 
 Vemos el servicio vulnerable a una backdoor, así que abrimos metasploit para buscarlo:
 
-![Pasted image 20251016125204](Hacking-repo-obs/Anexos/Pasted%20image%2020251016125204.png)
+![Pasted image 20251016125204](../../Anexos/Pasted%20image%2020251016125204.png)
 
 Seteamos el RHOST y lanzamos el exploit:
 
-![Pasted image 20251016130720](Hacking-repo-obs/Anexos/Pasted%20image%2020251016130720.png)
+![Pasted image 20251016130720](../../Anexos/Pasted%20image%2020251016130720.png)
 
 ### PUERTO 25
 ____

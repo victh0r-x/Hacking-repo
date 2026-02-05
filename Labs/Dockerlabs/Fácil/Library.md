@@ -9,7 +9,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 172.17.0.2
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251018051344](Hacking-repo-obs/Anexos/Pasted%20image%2020251018051344.png)
+![Pasted image 20251018051344](../../../../Anexos/Pasted%20image%2020251018051344.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -17,11 +17,11 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,80 -vvv -oN version 172.17.0.2
 ```
 
-![Pasted image 20251018051405](Hacking-repo-obs/Anexos/Pasted%20image%2020251018051405.png)
+![Pasted image 20251018051405](../../../../Anexos/Pasted%20image%2020251018051405.png)
 
 No encontramos nada interesante, así que vamos a echar un vistazo al servicio web:
 
-![Pasted image 20251018051537](Hacking-repo-obs/Anexos/Pasted%20image%2020251018051537.png)
+![Pasted image 20251018051537](../../../../Anexos/Pasted%20image%2020251018051537.png)
 
 Dado que no vemos nada, vamos a aplicar fuzzing para descubrir directorios:
 
@@ -31,7 +31,7 @@ gobuster dir -u 172.17.0.2 -w /usr/share/seclists/Discovery/Web-Content/director
 
 Voy a seguir aplicando fuzzing sobre el directorio javascript a ver qué encuentro:
 
-![Pasted image 20251018053539](Hacking-repo-obs/Anexos/Pasted%20image%2020251018053539.png)
+![Pasted image 20251018053539](../../../../Anexos/Pasted%20image%2020251018053539.png)
 
 Vamos a ver de qué trata el archivo index.php:
 
@@ -51,7 +51,7 @@ Hemos descubierto el usuario carlos, así que vamos a entrar por ssh a ver qué 
 ssh carlos@172.17.0.2
 ```
 
-![Pasted image 20251018055204](Hacking-repo-obs/Anexos/Pasted%20image%2020251018055204.png)
+![Pasted image 20251018055204](../../../../Anexos/Pasted%20image%2020251018055204.png)
 
 Ahora, con el comando **sudo -l** vemos lo siguiente:
 
@@ -91,7 +91,7 @@ sudo -u root /usr/bin/python3 /opt/script.py
 
 Obtenemos un error, pero si ejecutamos el comando **ls -la /bin/bash** vemos lo siguiente:
 
-![Pasted image 20251018061725](Hacking-repo-obs/Anexos/Pasted%20image%2020251018061725.png)
+![Pasted image 20251018061725](../../../../Anexos/Pasted%20image%2020251018061725.png)
 
 Ahora solo queda ejecutar lo siguiente:
 

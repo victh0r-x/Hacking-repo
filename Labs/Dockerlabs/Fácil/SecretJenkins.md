@@ -9,7 +9,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 172.17.0.3
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251105125247](Hacking-repo-obs/Anexos/Pasted%20image%2020251105125247.png)
+![Pasted image 20251105125247](../../../../Anexos/Pasted%20image%2020251105125247.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -21,7 +21,7 @@ nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,8080 -vvv -oN version 172.17.0.2
 
 No encontramos nada interesante, así que vamos a echar un vistazo al servicio web que corre por el puerto 8080:
 
-![Pasted image 20251108075215](Hacking-repo-obs/Anexos/Pasted%20image%2020251108075215.png)
+![Pasted image 20251108075215](../../../../Anexos/Pasted%20image%2020251108075215.png)
 
 Antes de continuar voy a hacer fuzzing para descubrir directorios y archivos ocultos:
 
@@ -33,7 +33,7 @@ gobuster dir -u http://172.17.0.2:8080/ -w /usr/share/seclists/Discovery/Web-Con
 
 Si accedemos al index podemos ver un apartado llamado people donde podemos ver listados do usuarios, entre ellos admin:
 
-![Pasted image 20251108075145](Hacking-repo-obs/Anexos/Pasted%20image%2020251108075145.png)
+![Pasted image 20251108075145](../../../../Anexos/Pasted%20image%2020251108075145.png)
 
 Después de probar varios directorios no encuentro nada así que voy a probar hacer fuerza bruta con hydra al usuario admin. El mensaje de error que nos arroja la web cuando introduzco credenciales erróneas es el siguiente: **Invalid username or password** así que elaboramos el siguiente comando:
 
@@ -43,11 +43,11 @@ hydra -l admin -P /usr/share/wordlists/rockyou.txt "http-post-form://172.17.0.2:
 
 Nada funciona, así que sigo buscando y encuentro la versión de jenkins: 2.441
 
-![Pasted image 20251108082106](Hacking-repo-obs/Anexos/Pasted%20image%2020251108082106.png)
+![Pasted image 20251108082106](../../../../Anexos/Pasted%20image%2020251108082106.png)
 
 Tras una búsqueda en searchsploit, veo que podemos atacar a esta versión. El exploit consiste en un local file inclusion, y lo ejecuto con la ruta absoluta del archivo passwsd:
 
-![Pasted image 20251108083138](Hacking-repo-obs/Anexos/Pasted%20image%2020251108083138.png)
+![Pasted image 20251108083138](../../../../Anexos/Pasted%20image%2020251108083138.png)
 
 Pruebo acceder a los usuarios bobby y pinguinito con fuerza bruta:
 
@@ -55,7 +55,7 @@ Pruebo acceder a los usuarios bobby y pinguinito con fuerza bruta:
 hydra -l bobby -P /usr/share/wordlists/rockyou.txt -I ssh://172.17.0.2
 ```
 
-![Pasted image 20251108085024](Hacking-repo-obs/Anexos/Pasted%20image%2020251108085024.png)
+![Pasted image 20251108085024](../../../../Anexos/Pasted%20image%2020251108085024.png)
 
 Nos conectamos por ssh:
 
@@ -63,11 +63,11 @@ Nos conectamos por ssh:
 ssh bobby@172.17.0.2
 ```
 
-![Pasted image 20251108085210](Hacking-repo-obs/Anexos/Pasted%20image%2020251108085210.png)
+![Pasted image 20251108085210](../../../../Anexos/Pasted%20image%2020251108085210.png)
 
 Ejecutando el comando sudo -l vemos que podemos ejecutar como root el comando python3, así que vamos a ejecutar un comando malicioso en modo interactivo para acceder al sistema como el usuario pinguinito:
 
-![Pasted image 20251108085319](Hacking-repo-obs/Anexos/Pasted%20image%2020251108085319.png)
+![Pasted image 20251108085319](../../../../Anexos/Pasted%20image%2020251108085319.png)
 
 Ejecuto lo siguiente:
 
@@ -76,10 +76,10 @@ sudo -u pinguinito python3
 import os; os.system("/bin/bash");
 ```
 
-![Pasted image 20251108090621](Hacking-repo-obs/Anexos/Pasted%20image%2020251108090621.png)
+![Pasted image 20251108090621](../../../../Anexos/Pasted%20image%2020251108090621.png)
 
 Ahora vemos de nuevo que podemos ejecutar un script como root:
 
-![Pasted image 20251108090659](Hacking-repo-obs/Anexos/Pasted%20image%2020251108090659.png)
+![Pasted image 20251108090659](../../../../Anexos/Pasted%20image%2020251108090659.png)
 
-![Pasted image 20251108095433](Hacking-repo-obs/Anexos/Pasted%20image%2020251108095433.png)
+![Pasted image 20251108095433](../../../../Anexos/Pasted%20image%2020251108095433.png)

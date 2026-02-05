@@ -7,7 +7,7 @@ El primer paso es hacer un escaneo básico de puertos, utilizando el siguiente c
 nmap -sS -p- 172.17.0.2 -oN ports
 ```
 
-![Pasted image 20251007081551](Hacking-repo-obs/Anexos/Pasted%20image%2020251007081551.png)
+![Pasted image 20251007081551](../../../../Anexos/Pasted%20image%2020251007081551.png)
 
 Tras concluir el escaneo, exporto el resultado a un fichero llamado **ports** para poder manipularlo más tarde.
 En este caso están abiertos los puertos 80 y 22, correspondientes a un servicio web y a un ssh.
@@ -26,17 +26,17 @@ gobuster dir -u htto://http:172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Con
 - **-t** indica el número de hilos a utilizar. Por defecto son 4.
 - **-x** muy útil, sirve para que también haga búsqueda de ficheros con las extensiones que le indicamos, separadas por comas.
 
-![950](Hacking-repo-obs/Anexos/Pasted%20image%2020251007103414.png)
+![950](../../../../Anexos/Pasted%20image%2020251007103414.png)
 
 Aquí observamos que nos arroja dos directorios y un archivo .php. Si accedemos a la web: **http://172.17.0.2/index.php** vemos que no ocurre nada, así que probamos hacer fuzzing al archivo para intentar descubrir algún parámetro oculto.
 Para ello, usamos el siguiente comando:
 
 
-![Pasted image 20251007120001](Hacking-repo-obs/Anexos/Pasted%20image%2020251007120001.png)
+![Pasted image 20251007120001](../../../../Anexos/Pasted%20image%2020251007120001.png)
 
 Gracias a hacer fuzzing en el parámetro, vemos que obtenemos un Directory Path Traversal, obteniendo acceso al archivo /etc/passwd
 
-![700](Hacking-repo-obs/Anexos/Pasted%20image%2020251007115826.png)
+![700](../../../../Anexos/Pasted%20image%2020251007115826.png)
 
 Aquí podemos ver a los usuarios **vaxei** y **luisillo**, así que vamos a probar hacer fuerza bruta por el protocolo ssh utilizando la herramienta hydra:
 
@@ -47,7 +47,7 @@ hydra -l luisillo -P /usr/share/wordlists/rockyou.txt -I ssh://172.17.0.3/
 
 No encontramos nada, así que, al tener solamente abierto el puerto ssh voy a intentar buscar en sus directorios home el archivo id_rsa.
 
-![Pasted image 20251026030311](Hacking-repo-obs/Anexos/Pasted%20image%2020251026030311.png)
+![Pasted image 20251026030311](../../../../Anexos/Pasted%20image%2020251026030311.png)
 
 Ahora, copiamos el contenido y nos creamos un archivo llamado id_rsa en nuestro directorio de trabajo. le asignamos los permisos correspondientes y luego entramos por ssh:
 
@@ -72,7 +72,7 @@ Ejecutamos y somos luisillo:
 
 Ahora vemos lo siguiente:
 
-![Pasted image 20251026032102](Hacking-repo-obs/Anexos/Pasted%20image%2020251026032102.png)
+![Pasted image 20251026032102](../../../../Anexos/Pasted%20image%2020251026032102.png)
 
 ![Pasted image 20251026032211.png](Pasted%20image%2020251026032211.png)
 
@@ -84,4 +84,4 @@ echo 'import os; os.system("/bin/bash")' > paw.py
 sudo -u root /usr/bin/python3 /opt/paw.py 
 ```
 
-![Pasted image 20251026035318](Hacking-repo-obs/Anexos/Pasted%20image%2020251026035318.png)
+![Pasted image 20251026035318](../../../../Anexos/Pasted%20image%2020251026035318.png)

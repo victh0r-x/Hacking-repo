@@ -2,17 +2,17 @@ tags:
 _____
 ### Basic SSRF against the local server
 ____
-![900](Hacking-repo-obs/Anexos/Pasted%20image%2020251025065944.png)
+![900](../../../Anexos/Pasted%20image%2020251025065944.png)
 
 Aquí vamos a aplicar un URL decode a ese enlace y probamos cambiar la ip por la del localhost:
 
-![Pasted image 20251025070502](Hacking-repo-obs/Anexos/Pasted%20image%2020251025070502.png)
+![Pasted image 20251025070502](../../../Anexos/Pasted%20image%2020251025070502.png)
 
-![Pasted image 20251025070536](Hacking-repo-obs/Anexos/Pasted%20image%2020251025070536.png)
+![Pasted image 20251025070536](../../../Anexos/Pasted%20image%2020251025070536.png)
 
 Accedemos encontes a http://localhost/admin:
 
-![Pasted image 20251025070632](Hacking-repo-obs/Anexos/Pasted%20image%2020251025070632.png)
+![Pasted image 20251025070632](../../../Anexos/Pasted%20image%2020251025070632.png)
 
 Buscamos en el código el botón de delete:
 
@@ -24,21 +24,21 @@ Resuelto
 
 ### Basic SSRF against another back-end system
 ____
-![Pasted image 20251025071522](Hacking-repo-obs/Anexos/Pasted%20image%2020251025071522.png)
+![Pasted image 20251025071522](../../../Anexos/Pasted%20image%2020251025071522.png)
 
 Para este laboratorio vamos a usar el intruder para fuzzear la parte del host de la IP.
 
-![Pasted image 20251025073331](Hacking-repo-obs/Anexos/Pasted%20image%2020251025073331.png)
+![Pasted image 20251025073331](../../../Anexos/Pasted%20image%2020251025073331.png)
 
-![Pasted image 20251025073435](Hacking-repo-obs/Anexos/Pasted%20image%2020251025073435.png)
+![Pasted image 20251025073435](../../../Anexos/Pasted%20image%2020251025073435.png)
 
-![Pasted image 20251025073500](Hacking-repo-obs/Anexos/Pasted%20image%2020251025073500.png)
+![Pasted image 20251025073500](../../../Anexos/Pasted%20image%2020251025073500.png)
 
 Resuelto
 
 ### SSRF with blacklist-based input filter
 ____
-![Pasted image 20251026060738](Hacking-repo-obs/Anexos/Pasted%20image%2020251026060738.png)
+![Pasted image 20251026060738](../../../Anexos/Pasted%20image%2020251026060738.png)
 
 Para saltarse esta protección, se puede probar alguna de las siguientes opciones:
 
@@ -55,12 +55,12 @@ a = %61
 a, por tanto, vale = %2561
 ```
 
-![Pasted image 20251026061305](Hacking-repo-obs/Anexos/Pasted%20image%2020251026061305.png)
+![Pasted image 20251026061305](../../../Anexos/Pasted%20image%2020251026061305.png)
 
 En este caso, la opción que funciona es la siguiente:
 
-![Pasted image 20251026061536](Hacking-repo-obs/Anexos/Pasted%20image%2020251026061536.png)
+![Pasted image 20251026061536](../../../Anexos/Pasted%20image%2020251026061536.png)
 
 ### SSRF with filter bypass via open redirection vulnerability
 ____
-![Pasted image 20251026064143](Hacking-repo-obs/Anexos/Pasted%20image%2020251026064143.png)
+![Pasted image 20251026064143](../../../Anexos/Pasted%20image%2020251026064143.png)

