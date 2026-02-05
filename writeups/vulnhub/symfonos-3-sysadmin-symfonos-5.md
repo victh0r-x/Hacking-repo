@@ -56,7 +56,7 @@ Al hacer fuzzing al directorio **/cgi-bin/**, econtramos el directorio **underwo
 
 ![Pasted image 20251201154355](<../../.gitbook/assets/Pasted image 20251201154355.png>)
 
-Voy a centrarme en el recurso **/cgi-bin/underworld** ya que esto a veces es indicativo de un ataque tipo shell shock siempre que la versión de la bash sea lo suficientemente antigua. Para probar hacer un ataque shell shock, se deben seguir los pasos de [Shell shock](Hacking-repo-obs/Vulnerabilidades/Shell%20shock/Shell%20shock.md.md). A modo de resumen, esta vulnerabilidad se sucede cambiando el user-agent de la página, que se puede hacer tanto con burpsuite como desde consola. Voy a hacerlo desde consola, usando el siguiente comando:
+Voy a centrarme en el recurso **/cgi-bin/underworld** ya que esto a veces es indicativo de un ataque tipo shell shock siempre que la versión de la bash sea lo suficientemente antigua. Para probar hacer un ataque shell shock, se deben seguir los pasos de [Shell shock](../../Labs/VulnHub/Hacking-repo-obs/Vulnerabilidades/Shell%20shock/Shell%20shock.md.md). A modo de resumen, esta vulnerabilidad se sucede cambiando el user-agent de la página, que se puede hacer tanto con burpsuite como desde consola. Voy a hacerlo desde consola, usando el siguiente comando:
 
 ```bash
 curl -s -X GET "http://192.168.0.204/cgi-bin/underworld" -H "User-Agent: () { :; }; echo; /usr/bin/whoami"
@@ -137,7 +137,7 @@ Aunque este paso de rootear la máquina no es estrictamente necesario, nunca est
 
 ![Pasted image 20251202214201](<../../.gitbook/assets/Pasted image 20251202214201.png>)
 
-Además de la ip que se encuentra en el segmento de red 192.168.0 vemos otra red, la 10.10.10.0. Ahora comenzamos con el pivoting y el hackeo de las siguientes máquinas. Para ello primero voy a hacer un descubrimiento sencillo tanto de hosts como de los puertos usando dos oneliners de bash, que se usaron en el pivoting de las máquinas SYMFONOS 1 y SYMFONOS 2: [SYMFONOS 1 - SYMFONOS 2 - PIVOTING](Hacking-repo-obs/Labs/VulnHub/SYMFONOS%201%20-%20SYMFONOS%202%20-%20PIVOTING.md.md)
+Además de la ip que se encuentra en el segmento de red 192.168.0 vemos otra red, la 10.10.10.0. Ahora comenzamos con el pivoting y el hackeo de las siguientes máquinas. Para ello primero voy a hacer un descubrimiento sencillo tanto de hosts como de los puertos usando dos oneliners de bash, que se usaron en el pivoting de las máquinas SYMFONOS 1 y SYMFONOS 2: [SYMFONOS 1 - SYMFONOS 2 - PIVOTING](../../Labs/VulnHub/Hacking-repo-obs/Labs/VulnHub/SYMFONOS%201%20-%20SYMFONOS%202%20-%20PIVOTING.md.md)
 
 ```bash
 seq 1 254 | xargs -P 100 -I HOST bash -c "ping -c 1 -W 2 10.10.10.HOST &>/dev/null && echo '[+] Host descubierto: 10.10.10.HOST'"
