@@ -6,7 +6,7 @@ ____
 ping -c 1 172.17.0.2
 ```
   
-![Pasted image 20251118194611](Hacking-repo-obs/Anexos/Pasted%20image%2020251118194611.png)
+![Pasted image 20251118194611](/Anexos/Pasted%20image%2020251118194611.png)
 
 Estamos ante un sistema linux, así que seguimos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
 
