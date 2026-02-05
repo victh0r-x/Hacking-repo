@@ -22,7 +22,7 @@ nmap -sCV --min-rate 5000 -vvv -n -Pn -p22,21 -vvv -oN version 172.17.0.2
 Vemos dos cosas, por un lado un archivo que veremos más adelante, y por otro que el login anónimo está activado.
 Vamos a acceder entonces con el usuario **anonymous** y la contraseña en blanco.
 
-![Pasted image 20251018143931](Pasted%20image%2020251018143931.png)
+![Pasted image 20251018143931](Hacking-repo-obs/Anexos/Pasted%20image%2020251018143931.png)
 
 Vemos ese archivo con el comando **ls**, así que nos lo descargamos con el comando **get**.
 
@@ -72,7 +72,7 @@ Node.js es sensible a una vulnerabilidad de escalada de privilegios con javascri
 })();
 ```
 
-![Pasted image 20251018151354](Pasted%20image%2020251018151354.png)
+![Pasted image 20251018151354](Hacking-repo-obs/Anexos/Pasted%20image%2020251018151354.png)
 
 Lo ejecutamos:
 

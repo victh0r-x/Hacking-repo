@@ -5,7 +5,7 @@ Comenzamos ejecutando el escaneo básico de puertos utilizando el siguiente coma
  nmap -sS -p- 172.18.0.2 --open --min-rate 4000 -vvv -oN ports 
 ```
 
-![Pasted image 20251008112255](Pasted%20image%2020251008112255.png)
+![Pasted image 20251008112255](Hacking-repo-obs/Anexos/Pasted%20image%2020251008112255.png)
 
 Al ver que están abiertos los puertos 22 y 80, ejecutamos un escaneo más enfocado en conocer la versión de los servicios que corren por esos puertos, así como enviar unos scripts básicos de reconocimiento: 
 ```bash
@@ -14,11 +14,11 @@ nmap -sCV -p22,80 172.18.0.2 -oN versions
 
 Vemos que no observamos nada especial:
 
-![Pasted image 20251008112725](Pasted%20image%2020251008112725.png)
+![Pasted image 20251008112725](Hacking-repo-obs/Anexos/Pasted%20image%2020251008112725.png)
 
 Sabemos que por el puerto 80 corre un servicio web, así que vamos al navegador a ver de que se trata:
 
-![Pasted image 20251008112858](Pasted%20image%2020251008112858.png)
+![Pasted image 20251008112858](Hacking-repo-obs/Anexos/Pasted%20image%2020251008112858.png)
 
 Se trata de la página por defecto de apache. Vamos a proceder a aplicar fuzzing para descubrir directorios ocultos y ver hasta donde podemos llegar. Para ello voy a utilizar gobuster, con el siguiente comando:
 
@@ -28,11 +28,11 @@ gobuster dir -u http://172.18.0.2/ -w /usr/share/seclists/Discovery/Web-Content/
 
 Obtenemos lo siguiente, y lo exportamos al archivo dirs.txt
 
-![Pasted image 20251008113422](Pasted%20image%2020251008113422.png)
+![Pasted image 20251008113422](Hacking-repo-obs/Anexos/Pasted%20image%2020251008113422.png)
 
 Esta información es muy relevante. El archivo index.html es la misma página por defecto de apache, así que enfocaremos el ataque en el archivo .php, el cual se ve de esta forma después de añadirlo en la url:
 
-![Pasted image 20251008113651](Pasted%20image%2020251008113651.png)
+![Pasted image 20251008113651](Hacking-repo-obs/Anexos/Pasted%20image%2020251008113651.png)
 
 En este punto, me da por probar php wrappers sin éxito, por lo que decido hacer fuzzing para intentar descubrir parámetros ocultos en el archivo .php para intentar hacer un LFI. Para ello uso gobuster en modo fuzz, con el siguiente comando:
 
@@ -46,7 +46,7 @@ No hay éxito, así que voy a optar por intentar hacer fuerza bruta con el usuar
 hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.18.0.2 -s 22 -t 4 -I
 ```
 
-![Pasted image 20251008140608](Pasted%20image%2020251008140608.png)
+![Pasted image 20251008140608](Hacking-repo-obs/Anexos/Pasted%20image%2020251008140608.png)
 
 Obtenemos la contraseña, la cual es **chocolate** y accedemos mediante ssh con el siguiente comando:
 
@@ -56,7 +56,7 @@ ssh mario@172.17.0.2
 
 Y con esto, estamos dentro:
 
-![Pasted image 20251008140804](Pasted%20image%2020251008140804.png)
+![Pasted image 20251008140804](Hacking-repo-obs/Anexos/Pasted%20image%2020251008140804.png)
 
 Ahora, vamos a ejecutar el siguiente comando para buscar binarios con permiso SUID para efectuar la escalada. Y mas tarde usar el comando **sudo -l** para revisar posibles permisos, y obtenemos lo siguiente:
 
@@ -64,12 +64,12 @@ Ahora, vamos a ejecutar el siguiente comando para buscar binarios con permiso SU
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251008141710](Pasted%20image%2020251008141710.png)
+![Pasted image 20251008141710](Hacking-repo-obs/Anexos/Pasted%20image%2020251008141710.png)
 
 Vemos que podemos ejecutar como sudo el binario vim, así que lo consultamos en https://gtfobins.github.io/gtfobins/ y obtenenemos lo siguiente:
 
-![Pasted image 20251008141838](Pasted%20image%2020251008141838.png)
+![Pasted image 20251008141838](Hacking-repo-obs/Anexos/Pasted%20image%2020251008141838.png)
 
 Ejecutamos el comando y... root!
 
-![Pasted image 20251008141927](Pasted%20image%2020251008141927.png)
+![Pasted image 20251008141927](Hacking-repo-obs/Anexos/Pasted%20image%2020251008141927.png)

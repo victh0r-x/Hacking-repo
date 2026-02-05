@@ -21,20 +21,20 @@ ______________
 - `-oN scan` — Guardar la salida en formato normal en el fichero `scan`.
 - `172.17.0.2` — Dirección IP objetivo a escanear.
 ______________________
-![Pasted image 20251010055139](Pasted%20image%2020251010055139.png)
+![Pasted image 20251010055139](Hacking-repo-obs/Anexos/Pasted%20image%2020251010055139.png)
 
 No vemos nada muy interesante así que vamos a ver que corre por el servicio web:
 
-![Pasted image 20251010061916](Pasted%20image%2020251010061916.png)
+![Pasted image 20251010061916](Hacking-repo-obs/Anexos/Pasted%20image%2020251010061916.png)
 
 La URL mostrada, nos lleva a una web externa de github, por lo que no es relevante para continuar.
 Lo que si es relevante, es el formulario que se encuentra más abajo:
 
-![Pasted image 20251010062148](Pasted%20image%2020251010062148.png)
+![Pasted image 20251010062148](Hacking-repo-obs/Anexos/Pasted%20image%2020251010062148.png)
 
 Vamos a interceptar esta petición con burpsuite para ver como se está procesando por detrás:
 
-![Pasted image 20251010062432](Pasted%20image%2020251010062432.png)
+![Pasted image 20251010062432](Hacking-repo-obs/Anexos/Pasted%20image%2020251010062432.png)
 
 Antes de continuar por aquí, vamos a aplicar fuzzing para descubrir si hay directorios o archivos ocultos:
 
@@ -52,19 +52,19 @@ ___________________
 - `-t 40` — Número de threads concurrentes (40 peticiones paralelas; alto paralelismo, ruidoso).
 - `-o dirs.txt` — Archivo donde se guardan los resultados encontrados (salida).
 _________________________
-![Pasted image 20251010062650](Pasted%20image%2020251010062650.png)
+![Pasted image 20251010062650](Hacking-repo-obs/Anexos/Pasted%20image%2020251010062650.png)
 
 ```
 http://172.17.0.2/important/
 ```
 
-![Pasted image 20251010062735](Pasted%20image%2020251010062735.png)
+![Pasted image 20251010062735](Hacking-repo-obs/Anexos/Pasted%20image%2020251010062735.png)
 
 ```
 http://172.17.0.2/backup/
 ```
 
-![Pasted image 20251010062845](Pasted%20image%2020251010062845.png)
+![Pasted image 20251010062845](Hacking-repo-obs/Anexos/Pasted%20image%2020251010062845.png)
 
 Voy a descargarme ambos archivos a mi directorio /content con el comando curl:
 
@@ -75,7 +75,7 @@ curl -O -X GET http://172.17.0.2/important/important.md
 
 En el archivo important.md no encontramos nada valioso, pero en el archivo backup.txt si:
 
-![Pasted image 20251010064724](Pasted%20image%2020251010064724.png)
+![Pasted image 20251010064724](Hacking-repo-obs/Anexos/Pasted%20image%2020251010064724.png)
 
 Este usuario ya lo habíamos encontrado en la web principal, abajo del todo con el siguiente correo: russoski@dockerlabs.es
 Si no hubiese encontrado este archivo, posiblemente habría probado hacer fuerza bruta.
@@ -85,24 +85,24 @@ Tenemos que fijarnos que en la línea de texto dice que es su usuario para todos
 hydra -l russoski -P /usr/share/wordlists/rockyou.txt ftp://172.17.0.2 -I
 ```
 
-![Pasted image 20251010065728](Pasted%20image%2020251010065728.png)
+![Pasted image 20251010065728](Hacking-repo-obs/Anexos/Pasted%20image%2020251010065728.png)
 
-![Pasted image 20251010065827](Pasted%20image%2020251010065827.png)
+![Pasted image 20251010065827](Hacking-repo-obs/Anexos/Pasted%20image%2020251010065827.png)
 
 Hemos encontrado que para ambos servicios se usa la misma contraseña. Entramos primero al servicio ftp:
 
-![Pasted image 20251010070601](Pasted%20image%2020251010070601.png)
+![Pasted image 20251010070601](Hacking-repo-obs/Anexos/Pasted%20image%2020251010070601.png)
 
 Vemos dos directorios, con algunos archivos pero nada útil, así que nos conectamos por ssh y probamos hacer un **sudo -l**:
 
-![Pasted image 20251010071702](Pasted%20image%2020251010071702.png)
+![Pasted image 20251010071702](Hacking-repo-obs/Anexos/Pasted%20image%2020251010071702.png)
 
 Ya vemos claramente que tenemos permisos para ejecutar vim como sudo sin contraseña, así que vamos a GTFOBins a ver qué podemos hacer:
 
-![Pasted image 20251010071842](Pasted%20image%2020251010071842.png)
+![Pasted image 20251010071842](Hacking-repo-obs/Anexos/Pasted%20image%2020251010071842.png)
 
 Ejecutamos el comando en la máquina:
 
-![Pasted image 20251010071921](Pasted%20image%2020251010071921.png)
+![Pasted image 20251010071921](Hacking-repo-obs/Anexos/Pasted%20image%2020251010071921.png)
 
 Somos root!!
