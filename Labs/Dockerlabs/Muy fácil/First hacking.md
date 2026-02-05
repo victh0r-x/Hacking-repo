@@ -6,7 +6,7 @@ Empezamos la máquina haciendo un reconocimiento básico de puertos:
 map -sS -p- 172.17.0.2 -n -Pn -vvv --open --min-rate 2000 -oN ports
 ```
 
-![Pasted image 20251008171854](../../../../Anexos/Pasted%20image%2020251008171854.png)
+![Pasted image 20251008171854](../../../Anexos/Pasted%20image%2020251008171854.png)
 
 Al solo tener un puerto abierto, el 21, vamos a ejecutar unos scripts básicos para conocer la versión del servicio y también lanzar unos scripts básicos de vulnerabilidades:
 
@@ -14,18 +14,18 @@ Al solo tener un puerto abierto, el 21, vamos a ejecutar unos scripts básicos p
 nmap -sVC -p21 -oN versions -vvv 172.17.0.2
 ```
 
-![Pasted image 20251008172345](../../../../Anexos/Pasted%20image%2020251008172345.png)
+![Pasted image 20251008172345](../../../Anexos/Pasted%20image%2020251008172345.png)
 
 ```bash
 nmap --script vuln 172.17.0.2 -vvv -oN vuln
 ```
 
-![Pasted image 20251008172221](../../../../Anexos/Pasted%20image%2020251008172221.png)
+![Pasted image 20251008172221](../../../Anexos/Pasted%20image%2020251008172221.png)
 
 Aquí vemos que por el puerto 21 corre un servicio vsftpd 2.3.4, y que nos reporta una vulnerabilidad con backdoor, mas concretamente la **CVE-2011-2523**.
 Hacemos una búsqueda en searchsploit para ver como podemos explotarla:
 
-![Pasted image 20251008172615](../../../../Anexos/Pasted%20image%2020251008172615.png)
+![Pasted image 20251008172615](../../../Anexos/Pasted%20image%2020251008172615.png)
 
 Vamos a utilizar metasploit para acceder, así que abrimos la consola y ejecutamos el siguiente comando:
 ```bash
@@ -46,7 +46,7 @@ show options
 
 Y obtenemos lo siguiente:
 
-![Pasted image 20251008175502](../../../../Anexos/Pasted%20image%2020251008175502.png)
+![Pasted image 20251008175502](../../../Anexos/Pasted%20image%2020251008175502.png)
 
 Ahora, vemos que tenemos que cubrir el parámetro RHOSTS, así que lo seteamos con el comando:
 
@@ -60,8 +60,8 @@ Luego volvemos a comprobar con **show options** y comprobamos que ya tenemos tod
 exploit
 ```
 
-![Pasted image 20251008175803](../../../../Anexos/Pasted%20image%2020251008175803.png)
+![Pasted image 20251008175803](../../../Anexos/Pasted%20image%2020251008175803.png)
 
 Vemos que nos ha encontrado una shell, así que ejecutamos **whoami** y... root!!
 
-![Pasted image 20251008180001](../../../../Anexos/Pasted%20image%2020251008180001.png)
+![Pasted image 20251008180001](../../../Anexos/Pasted%20image%2020251008180001.png)

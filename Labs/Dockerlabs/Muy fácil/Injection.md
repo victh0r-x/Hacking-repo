@@ -5,14 +5,14 @@ Comenzamos como siempre haciendo un escaneo de puertos, usando el siguiente coma
 nmap -sS -p- 172.17.0.2 -oN ports  -vvv -oN ports
 ```
 
-![Pasted image 20251007165534](../../../../Anexos/Pasted%20image%2020251007165534.png)
+![Pasted image 20251007165534](../../../Anexos/Pasted%20image%2020251007165534.png)
 
 Ahora, ejecutamos el siguiente comando para escanear las versiones y enviar unos scripts básicos de reconocimiento:
 ```bash
 nmap -sCV -p80,22 172.17.0.2 -oN versions
 ```
 
-![Pasted image 20251007172120](../../../../Anexos/Pasted%20image%2020251007172120.png)
+![Pasted image 20251007172120](../../../Anexos/Pasted%20image%2020251007172120.png)
 
 Ahora ejecutamos el comando:
 ```bash
@@ -60,11 +60,11 @@ Ahora, vamos a realizar fuzzing con gobuster, usando el siguiente comando:
 gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 5 -x .php,.txt,.xml,.html -o dirs.txt
 ```
 
-![Pasted image 20251007172607](../../../../Anexos/Pasted%20image%2020251007172607.png)
+![Pasted image 20251007172607](../../../Anexos/Pasted%20image%2020251007172607.png)
 
 Al acceder a http://172.17.0.2/index.php observamos un panel de login:
 
-![Pasted image 20251007172738](../../../../Anexos/Pasted%20image%2020251007172738.png)
+![Pasted image 20251007172738](../../../Anexos/Pasted%20image%2020251007172738.png)
 
 Paralelamente, si accedemos a http://172.17.0.2/config.php vemos que la pagina se queda en blanco y no ocurre nada.
 
@@ -72,7 +72,7 @@ Si probamos hacer una SQL Injection en el panel, vemos que funciona con el sigui
 
 Nos da acceso de administrador y nos arroja una contraseña para el usuario Dylan: 
 
-![Pasted image 20251007183038](../../../../Anexos/Pasted%20image%2020251007183038.png)
+![Pasted image 20251007183038](../../../Anexos/Pasted%20image%2020251007183038.png)
 
 Ahora, probamos la contraseña para entrar por SSH, con el comando:
 
@@ -88,11 +88,11 @@ Ahora, con el siguiente comando, buscamos si tenemos algún binario que pueda se
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251007183543](../../../../Anexos/Pasted%20image%2020251007183543.png)
+![Pasted image 20251007183543](../../../Anexos/Pasted%20image%2020251007183543.png)
 
 En este caso, buscando en https://gtfobins.github.io/gtfobins/env/ podemos ver que efectivamente es vulnerable por SUID:
 
-![Pasted image 20251007183717](../../../../Anexos/Pasted%20image%2020251007183717.png)
+![Pasted image 20251007183717](../../../Anexos/Pasted%20image%2020251007183717.png)
 
 Así que, ejecutamos el siguiente comando **en la raíz del sistema** para obtener una bash privilegiada como root:
 
@@ -102,4 +102,4 @@ Así que, ejecutamos el siguiente comando **en la raíz del sistema** para obten
 
 Y con esto, obtenemos el root, completando la máquina!
 
-![Pasted image 20251007183949](../../../../Anexos/Pasted%20image%2020251007183949.png)
+![Pasted image 20251007183949](../../../Anexos/Pasted%20image%2020251007183949.png)

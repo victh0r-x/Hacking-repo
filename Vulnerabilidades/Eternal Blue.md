@@ -26,11 +26,11 @@ De esta forma todo lo que enviemos al puerto 4445 de la IP 192.168.0.211 se envi
 
 2. En este paso y con todo lo anterior configurado abro metasploit en mi máquina de atacante, busco eternal blue y uso el auxiliario **scanner/smb/smb_ms17_010** para testear que todo funcione. Ejecuto **options**y las introduzco:
 
-![Pasted image 20251204222041](../../Anexos/Pasted%20image%2020251204222041.png)
+![Pasted image 20251204222041](../Anexos/Pasted%20image%2020251204222041.png)
 
 El host es la IP de la máquina que está ejecutando socat y haciendo de "puente", y el puerto es el 4445 porque es en el que nos hemos puesto en escucha con socat. Al ejecutar esto vemos que efectivamente el flujo de la conexión se ejecuta correctamente:
 
-![Pasted image 20251204222156](../../Anexos/Pasted%20image%2020251204222156.png)
+![Pasted image 20251204222156](../Anexos/Pasted%20image%2020251204222156.png)
 
 Metasploit (Atacante)
     ↓
@@ -45,5 +45,5 @@ EternalBlue explota 10.10.10.134:445
 
 Ahora podemos finalmente obtener la sesión de meterpreter usando el exploit definitivo. Para este caso he elegido **exploit/windows/smb/ms17_010_eternalblue**. Ahora seteamos las opciones:
 
-![Pasted image 20251204223813](../../Anexos/Pasted%20image%2020251204223813.png)
+![Pasted image 20251204223813](../Anexos/Pasted%20image%2020251204223813.png)
 

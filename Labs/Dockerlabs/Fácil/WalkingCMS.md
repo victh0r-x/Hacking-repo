@@ -9,7 +9,7 @@ nmap -sS -p- 172.17.0.2 -oN ports -n -Pn --min-rate 5000 --open
 
 Esto nos permite exportar al fichero **ports** todos los puertos en formato nmap. Obtenemos lo siguiente:
 
-![Pasted image 20251013114409](../../../../Anexos/Pasted%20image%2020251013114409.png)
+![Pasted image 20251013114409](../../../Anexos/Pasted%20image%2020251013114409.png)
 
 Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión del servicio que corre por el puerto 80 y también lanzar unos scripts de nmap parra aplicar un reconocimiento:
 
@@ -17,11 +17,11 @@ Ahora, vamos a lanzar el siguiente comando para averiguar cuál es la versión d
 nmap -sCV -p- 172.17.0.2 -oN version -n -Pn --min-rate 5000
 ```
 
-![Pasted image 20251013114422](../../../../Anexos/Pasted%20image%2020251013114422.png)
+![Pasted image 20251013114422](../../../Anexos/Pasted%20image%2020251013114422.png)
 
 Ahora vamos a entrar al sitio web para averiguar de qué se trata:
 
-![Pasted image 20251013114918](../../../../Anexos/Pasted%20image%2020251013114918.png)
+![Pasted image 20251013114918](../../../Anexos/Pasted%20image%2020251013114918.png)
 
 Vamos a aplicar fuzzing para descubrir archivos o directorios ocultos, usando el siguiente comando:
 
@@ -29,7 +29,7 @@ Vamos a aplicar fuzzing para descubrir archivos o directorios ocultos, usando el
 gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x .php,.xml,.txt,.html -t 10 -o dirs.txt
 ```
 
-![Pasted image 20251013115829](../../../../Anexos/Pasted%20image%2020251013115829.png)
+![Pasted image 20251013115829](../../../Anexos/Pasted%20image%2020251013115829.png)
 
 Vamos a entrar a wordpress, aunque primero quiero tener una visión un poco más global, así que vamos a hacer fuzzing al directorio wordpress para ver hasta dónde podemos llegar:
 
@@ -39,22 +39,22 @@ gobuster dir -u http://172.17.0.2/wordpress/ -w /usr/share/seclists/Discovery/We
 
 Encontramos bastantes cosas:
 
-![Pasted image 20251013120622](../../../../Anexos/Pasted%20image%2020251013120622.png)
+![Pasted image 20251013120622](../../../Anexos/Pasted%20image%2020251013120622.png)
 
 El archivo /wp-trackback.php me resulta un tanto extraño, así que decido acceder a él:
 
-![Pasted image 20251013120703](../../../../Anexos/Pasted%20image%2020251013120703.png)
+![Pasted image 20251013120703](../../../Anexos/Pasted%20image%2020251013120703.png)
 
 Es curioso que me diga esto, pero no conseguimos nada.
 Otro fallo es que podemos acceder al recurso **xmlrpc.php** lo cual es un fallo bastante grave ya que nos permite enumerar bastantes cosas.
 
-![Pasted image 20251013122149](../../../../Anexos/Pasted%20image%2020251013122149.png)
+![Pasted image 20251013122149](../../../Anexos/Pasted%20image%2020251013122149.png)
 
 Para abusar de este archivo, vamos a utilizar una inyección de código a través del comando curl.
 
 Primero vamos a crear un archivo llamado ataque.xml para después inyectarlo:
 
-![Pasted image 20251013122706](../../../../Anexos/Pasted%20image%2020251013122706.png)
+![Pasted image 20251013122706](../../../Anexos/Pasted%20image%2020251013122706.png)
 
 ```bash
 POST /xmlrpc.php HTTP/1.1
@@ -68,7 +68,7 @@ Content-Length: 135
 </methodCall>
 ```
 
-![Pasted image 20251013123802](../../../../Anexos/Pasted%20image%2020251013123802.png)
+![Pasted image 20251013123802](../../../Anexos/Pasted%20image%2020251013123802.png)
 
 No vemos nada interesante, así que vamos a usar wp-scan para listar, por ejemplo, usuarios, con el siguiente comando:
 
@@ -78,7 +78,7 @@ wpscan --url http://172.17.0.2/wordpress/ --enumerate u,vp
 
 Encontramos el usuario **mario**:
 
-![Pasted image 20251013130638](../../../../Anexos/Pasted%20image%2020251013130638.png)
+![Pasted image 20251013130638](../../../Anexos/Pasted%20image%2020251013130638.png)
 
 Vamos a usar el siguiente comando para hacer fuerza bruta con wpscan al usuario mario:
 
@@ -86,11 +86,11 @@ Vamos a usar el siguiente comando para hacer fuerza bruta con wpscan al usuario 
 wpscan --url http://172.17.0.2/wordpress/ -U mario -P /usr/share/wordlists/rockyou.txt
 ```
 
-![Pasted image 20251013140439](../../../../Anexos/Pasted%20image%2020251013140439.png)
+![Pasted image 20251013140439](../../../Anexos/Pasted%20image%2020251013140439.png)
 
 Ahora, vamos a ver sus permisos:
 
-![Pasted image 20251013141127](../../../../Anexos/Pasted%20image%2020251013141127.png)
+![Pasted image 20251013141127](../../../Anexos/Pasted%20image%2020251013141127.png)
 
 Sabiendo que es admin, vamos al editor de temas, donde se encuentra un archivo .php en el que vamos a inyectar código malicioso:
 
@@ -99,7 +99,7 @@ Sabiendo que es admin, vamos al editor de temas, donde se encuentra un archivo .
 Encontramos este archivo, al que le ingresamos el código malicioso.
 Ahora buscamos el plugin y ejecutamos el archivo en la URL con el parámetro cmd=whoami:
 
-![Pasted image 20251013143803](../../../../Anexos/Pasted%20image%2020251013143803.png)
+![Pasted image 20251013143803](../../../Anexos/Pasted%20image%2020251013143803.png)
 
 Ahora, vamos a cambiar el código por una reverse shell a nuestra ip de atacante por el puerto 443:
 
@@ -107,11 +107,11 @@ Ahora, vamos a cambiar el código por una reverse shell a nuestra ip de atacante
 
 Hemos obtenido una reverse shell:
 
-![Pasted image 20251013144558](../../../../Anexos/Pasted%20image%2020251013144558.png)
+![Pasted image 20251013144558](../../../Anexos/Pasted%20image%2020251013144558.png)
 
 Hago el tratamiento de la TTY, me muevo a la raíz y compruebo:
 
-![Pasted image 20251013144717](../../../../Anexos/Pasted%20image%2020251013144717.png)
+![Pasted image 20251013144717](../../../Anexos/Pasted%20image%2020251013144717.png)
 
 Usando el siguiente comando vemos los binarios que tienen SUID:
 
@@ -119,14 +119,14 @@ Usando el siguiente comando vemos los binarios que tienen SUID:
 find / -perm -4000 2>/dev/null
 ```
 
-![Pasted image 20251013145217](../../../../Anexos/Pasted%20image%2020251013145217.png)
+![Pasted image 20251013145217](../../../Anexos/Pasted%20image%2020251013145217.png)
 
 Vemos que podemos abusar de la variable env, la cual buscaremos en GTFObins:
 
-![Pasted image 20251013145321](../../../../Anexos/Pasted%20image%2020251013145321.png)
+![Pasted image 20251013145321](../../../Anexos/Pasted%20image%2020251013145321.png)
 
 Lo ejecutamos:
 
-![Pasted image 20251013145816](../../../../Anexos/Pasted%20image%2020251013145816.png)
+![Pasted image 20251013145816](../../../Anexos/Pasted%20image%2020251013145816.png)
 
 Somos root!!
