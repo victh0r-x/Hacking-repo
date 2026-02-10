@@ -1,8 +1,12 @@
+# xmlrpc.php
+
 tags: #wordpress
-_____
+
+***
+
 Sabremos que podemos abusar de este archivo, cuando accediendo a la URL vemos lo siguiente:
 
-![Pasted image 20251013120703](Anexos/Pasted%20image%2020251013120703.png)
+![Pasted image 20251013120703](<.gitbook/assets/Pasted image 20251013120703.png>)
 
 Si vemos esto, lo que debemos hacer ahora es enviar por POST un archivo malicioso .xml, y para ello vamos a crearlo con el nombre que deseemos y el siguiente código:
 
@@ -25,6 +29,3 @@ curl -X POST 'IP_VICTIMA/xmlrpc.php' -d@archivo.xml
 ```
 
 Este debería de ser el resultado:
-
-
-
