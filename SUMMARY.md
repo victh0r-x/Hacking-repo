@@ -4,7 +4,7 @@
 
 ## WRITEUPS
 
-* [Hack My VM](<README (2).md>)
+* [Hack My VM](writeups/hack-my-vm/README.md)
   * [Friendly3](writeups/hack-my-vm/friendly3.md)
   * [Microshoft](writeups/hack-my-vm/microshoft.md)
 * [Metasploitable 2](writeups/metasploitable-2.md)
@@ -82,7 +82,7 @@
 
 ***
 
-* [Hacking-repo](<README (1).md>)
+* [Hacking-repo](hacking-repo.md)
 * [Arp-scan](Arp-scan.md)
 * [Compartir archivos entre máquinas](<Compartir archivos entre máquinas.md>)
 * [Escalada de Privilegios](<Escalada de Privilegios.md>)
